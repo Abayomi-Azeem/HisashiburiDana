@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWS.Logger.AspNetCore" Version="3.3.0" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.106.45" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103.14" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HisashiburiDana.Contract\HisashiburiDana.Contract.csproj" />
+  </ItemGroup>
+
+</Project>
