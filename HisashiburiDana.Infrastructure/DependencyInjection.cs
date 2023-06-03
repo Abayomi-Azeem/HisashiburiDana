@@ -2,15 +2,21 @@
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
+using HisashiburiDana.Application.Abstractions.Infrastucture.IHelpers;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IRepository;
+using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
 using HisashiburiDana.Contract.Common;
 using HisashiburiDana.Infrastructure.Authentication;
+using HisashiburiDana.Infrastructure.Helpers;
 using HisashiburiDana.Infrastructure.Persistence;
 using HisashiburiDana.Infrastructure.Persistence.Repository;
+using HisashiburiDana.Infrastructure.ThirdPartyDependecies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +32,8 @@ namespace HisashiburiDana.Infrastructure
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITokenGenerator, TokenGenerator>();
+            services.AddTransient<IAnimeListManager, AnimeListManager>();
+            services.AddSingleton<IRequestSender, RequestSender>();
 
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
@@ -44,9 +52,21 @@ namespace HisashiburiDana.Infrastructure
                 Region = awsConfig.RegionEndpoint
             });
 
-            //services.AddDbContext<AnimeDbContext>(
-            //    options => options.UseSqlServer(configuration.GetConnectionString("AnimeDbConnString"), sqlOptions => sqlOptions.EnableRetryOnFailure(50))
-            //    );
+            services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration.GetSection("JstSettings:Issuer").Value,
+                    ValidAudience = configuration.GetSection("JstSettings:Audience").Value,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                                            Encoding.UTF8.GetBytes(configuration.GetSection("JstSettings:SecretKey").Value)
+                    )
+                });
+
+
             return services;
         }
     }

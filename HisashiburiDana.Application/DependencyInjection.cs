@@ -13,7 +13,10 @@ namespace HisashiburiDana.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+
+
             services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IAniListService, AniListService>();
             return services;
         }
     }
