@@ -10,6 +10,7 @@ namespace HisashiburiDana.Application.Abstractions.Application
 {
     public interface IAuthenticationService
     {
+        Task<GeneralResponseWrapper<LoginResponse>> LoginUser(LoginRequest request);
         Task<GeneralResponseWrapper<bool?>> RegisterNewUser(RegisterRequest request);
 
 

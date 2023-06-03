@@ -32,7 +32,18 @@ namespace HisashiburiDana.Api.Controllers
         }
 
 
-
+        [Route("login")]
+        [HttpPost]
+        [Produces(typeof(GeneralResponseWrapper<LoginResponse>))]
+        public async Task<IActionResult> Login(LoginRequest request)
+        {
+            var loginResponse = await _authService.LoginUser(request);
+            if (loginResponse.HasError)
+            {
+                return BadRequest(loginResponse);
+            }
+            return Ok(loginResponse);
+        }
         //login
 
         

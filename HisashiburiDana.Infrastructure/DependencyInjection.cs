@@ -1,8 +1,11 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
+using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IRepository;
+using HisashiburiDana.Contract.Common;
+using HisashiburiDana.Infrastructure.Authentication;
 using HisashiburiDana.Infrastructure.Persistence;
 using HisashiburiDana.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +25,14 @@ namespace HisashiburiDana.Infrastructure
         {
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITokenGenerator, TokenGenerator>();
 
-            var awsCredentials = new BasicAWSCredentials("AKIAQT6UMGNBOSHW4UXE", "XCGlC/4THX4BrfMzUC/dI5h4HL661tq8UTVc0luu");
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+
+            var accessKey = configuration.GetSection("AwsSettings:AccessKey").Value;
+            var secretkey = configuration.GetSection("AwsSettings:SecretKey").Value;
+
+            var awsCredentials = new BasicAWSCredentials(accessKey, secretkey);
             var awsConfig = new AmazonDynamoDBConfig
             {
                 RegionEndpoint = Amazon.RegionEndpoint.EUWest2 // Set your desired region
