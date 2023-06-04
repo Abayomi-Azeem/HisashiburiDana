@@ -59,10 +59,10 @@ namespace HisashiburiDana.Infrastructure
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration.GetSection("JstSettings:Issuer").Value,
-                    ValidAudience = configuration.GetSection("JstSettings:Audience").Value,
+                    ValidIssuer = configuration.GetSection("JwtSettings:Issuer").Value,
+                    ValidAudience = configuration.GetSection("JwtSettings:Audience").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                                            Encoding.UTF8.GetBytes(configuration.GetSection("JstSettings:SecretKey").Value)
+                                            Encoding.UTF8.GetBytes(configuration.GetSection("JwtSettings:SecretKey").Value)
                     )
                 });
 
