@@ -22,18 +22,18 @@ namespace HisashiburiDana.Api.Controllers
 
 
         //addToWAtchlist
-        [HttpPost]
-        [Route("addtowatchlist")]
-        public Task<IActionResult> AddToWatchlist(AddAnimeToWatchListRequest animeDetails)
-        {
-            var response = _userService.AddNewAnimeToWatchList(animeDetails);
+        //[HttpPost]
+        //[Route("addtowatchlist")]
+        //public Task<IActionResult> AddToWatchlist(AddAnimeToWatchListRequest animeDetails)
+        //{
+        //    var response = _userService.AddNewAnimeToWatchList(animeDetails);
 
-            if (response.HasError)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
-        }
+        //    if (response.HasError)
+        //    {
+        //        return BadRequest(response);
+        //    }
+        //    return Ok(response);
+        //}
 
 
         //addtoalreadywatched
