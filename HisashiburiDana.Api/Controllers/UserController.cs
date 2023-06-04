@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HisashiburiDana.Application.Abstractions.Application;
+using HisashiburiDana.Contract.AnimeManager;
+using HisashiburiDana.Contract.Authentication;
+using HisashiburiDana.Contract.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +13,27 @@ namespace HisashiburiDana.Api.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
 
         //addToWAtchlist
-        
+        [HttpPost]
+        [Route("addtowatchlist")]
+        public Task<IActionResult> AddToWatchlist(AddAnimeToWatchListRequest animeDetails)
+        {
+            var response = _userService.AddNewAnimeToWatchList(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
 
         //addtoalreadywatched
