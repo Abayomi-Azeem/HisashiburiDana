@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using HisashiburiDana.Application.Abstractions.Application;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace HisashiburiDana.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AniListController : ControllerBase
     {
         private readonly IAniListService _anilistService;
@@ -19,7 +21,7 @@ namespace HisashiburiDana.Api.Controllers
 
         [Route("getanimes")]
         [HttpGet]
-        public async Task<IActionResult> GetAnimes(int PageNumber)
+        public async Task<IActionResult> GetAnimes(int PageNumber = 1)
         {
             var response = await _anilistService.GetAnimes(PageNumber);
             if (response.HasError)

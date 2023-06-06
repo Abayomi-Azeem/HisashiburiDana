@@ -7,7 +7,7 @@ namespace HisashiburiDana.Api.Filters
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            swaggerDoc.Servers = new List<OpenApiServer>() { new OpenApiServer() { Url = "/hisashiburidana" } };
+            swaggerDoc.Servers = new List<OpenApiServer>() { new OpenApiServer() { Url = "" } };
         }
     }
 }

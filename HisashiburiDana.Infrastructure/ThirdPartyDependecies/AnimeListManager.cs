@@ -77,6 +77,9 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
         rankings{
             rank
             allTime
+            context
+            type
+            format
         } 
         siteUrl           
     }      

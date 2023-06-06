@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using HisashiburiDana.Application.Abstractions.Infrastucture.IPersistence.IRepository;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IRepository;
 using System;
@@ -14,10 +15,12 @@ namespace HisashiburiDana.Infrastructure.Persistence
     {
         private readonly DynamoDBContext _context;
 
-        public UnitOfWork(IAmazonDynamoDB client, IUserRepository userRepo)
+        public UnitOfWork(IAmazonDynamoDB client, IUserRepository userRepo, IAnimeRankRepository animeRepo, IUserAnimeRepository userAnime)
         {
             _context = new DynamoDBContext(client);
             UserRepo = userRepo;
+            UserAnimeRepo = userAnime;
+            AnimeRankingsRepo = animeRepo;
         }
 
 
@@ -26,7 +29,9 @@ namespace HisashiburiDana.Infrastructure.Persistence
 
         public IUserRepository UserRepo { get; set; }
 
-        
+        public IUserAnimeRepository UserAnimeRepo { get; set; }
+
+        public IAnimeRankRepository AnimeRankingsRepo { get; set; }
         
         
         public void Dispose()

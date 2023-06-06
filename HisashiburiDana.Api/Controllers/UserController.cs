@@ -10,30 +10,30 @@ namespace HisashiburiDana.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IUserAnimeService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserAnimeService userService)
         {
             _userService = userService;
         }
 
 
         //addToWAtchlist
-        //[HttpPost]
-        //[Route("addtowatchlist")]
-        //public Task<IActionResult> AddToWatchlist(AddAnimeToWatchListRequest animeDetails)
-        //{
-        //    var response = _userService.AddNewAnimeToWatchList(animeDetails);
+        [HttpPost]
+        [Route("addtowatchlist")]
+        public async Task<IActionResult> AddToWatchlist([FromBody]AddAnimeToWatchListRequest animeDetails)
+        {
+            var response = await _userService.AddNewAnimeToWatchList(animeDetails);
 
-        //    if (response.HasError)
-        //    {
-        //        return BadRequest(response);
-        //    }
-        //    return Ok(response);
-        //}
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
 
         //addtoalreadywatched

@@ -15,8 +15,9 @@ namespace HisashiburiDana.Application
         {
 
 
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
-            services.AddTransient<IAniListService, AniListService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAniListService, AniListService>();
+            services.AddScoped<IUserAnimeService, UserAnimeService>();
             return services;
         }
     }

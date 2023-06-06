@@ -82,6 +82,13 @@ namespace HisashiburiDana.Contract.AnimeManager
         public int? Rank { get; set; }
 
         public bool? AllTime { get; set; }
+
+        public string Context { get; set; }
+
+        public string Type { get; set; }
+
+        public string Format { get; set; }
     }
+
 
 }

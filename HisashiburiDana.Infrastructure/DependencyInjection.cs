@@ -3,6 +3,7 @@ using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
 using HisashiburiDana.Application.Abstractions.Infrastucture.IHelpers;
+using HisashiburiDana.Application.Abstractions.Infrastucture.IPersistence.IRepository;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IRepository;
 using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
@@ -29,11 +30,14 @@ namespace HisashiburiDana.Infrastructure
     {
         public static IServiceCollection AddAInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ITokenGenerator, TokenGenerator>();
-            services.AddTransient<IAnimeListManager, AnimeListManager>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<IAnimeListManager, AnimeListManager>();
+            services.AddScoped<IUserAnimeRepository, UserAnimeRepository>();
+            services.AddScoped<IAnimeRankRepository, AnimeRankRepository>();
             services.AddSingleton<IRequestSender, RequestSender>();
+            
 
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
