@@ -24,7 +24,7 @@ namespace HisashiburiDana.Api.Controllers
         //addToWAtchlist
         [HttpPost]
         [Route("addtowatchlist")]
-        public async Task<IActionResult> AddToWatchlist([FromBody]AddAnimeToWatchListRequest animeDetails)
+        public async Task<IActionResult> AddToWatchlist([FromBody] AddAnimeFromAniList animeDetails)
         {
             var response = await _userService.AddNewAnimeToWatchList(animeDetails);
 
@@ -35,8 +35,31 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        [Route("addnewtoalreadywatched")]
+        public async Task<IActionResult> AddToAlreadyWatched([FromBody] AddAnimeFromAniList animeDetails)
+        {
+            var response = await _userService.AddNewAnimeToAlreadyWatched(animeDetails);
 
-        //addtoalreadywatched
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("addnewtocurrentlywatching")]
+        public async Task<IActionResult> AddToCurrentlyWatching([FromBody] AddAnimeFromAniList animeDetails)
+        {
+            var response = await _userService.AddNewAnimeToCurrentlyWatching(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
         //addToCurrentlywatching
 

@@ -11,7 +11,7 @@ namespace HisashiburiDana.Domain.Entities
     [DynamoDBTable("ToWatchAnimes")]
     public class ToWatchAnimes
     {
-        private ToWatchAnimes(AddAnimeToWatchListRequest request)
+        private ToWatchAnimes(AddAnimeFromAniList request)
         {
             Id = Guid.NewGuid().ToString();
             UserId = request.UserId;
@@ -58,9 +58,8 @@ namespace HisashiburiDana.Domain.Entities
         public DateTime DateAdded { get; private set; }
 
 
-        public static ToWatchAnimes Create(AddAnimeToWatchListRequest request)
-        {
-                        
+        public static ToWatchAnimes Create(AddAnimeFromAniList request)
+        {                        
             return new(request);
         }
 

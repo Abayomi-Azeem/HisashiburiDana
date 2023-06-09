@@ -12,9 +12,13 @@ namespace HisashiburiDana.Application.Abstractions.Infrastucture.Persistence
     {
         IUserRepository UserRepo {get; }
 
-        IUserAnimeRepository UserAnimeRepo { get; }
+        IToWatchAnimeRepository ToWatchAnimeRepo { get; }
 
         IAnimeRankRepository AnimeRankingsRepo { get;  }
+
+        IAlreadyWatchedAnimeRepository WatchedAnimeRepo { get;  }
+
+        ICurrentlyWatchingAnimeRepository WatchingAnimeRepo { get; }
 
         Task SaveChanges<T>(T value);
     }

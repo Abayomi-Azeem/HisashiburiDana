@@ -10,6 +10,9 @@ namespace HisashiburiDana.Application.Abstractions.Application
 {
     public interface IUserAnimeService
     {
-        Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeToWatchListRequest request);
+        Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeFromAniList request);
+
+        Task<GeneralResponseWrapper<bool>> AddNewAnimeToAlreadyWatched(AddAnimeFromAniList request);
+        Task<GeneralResponseWrapper<bool>> AddNewAnimeToCurrentlyWatching(AddAnimeFromAniList request);
     }
 }

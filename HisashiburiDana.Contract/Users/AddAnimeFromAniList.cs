@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HisashiburiDana.Contract.Users
 {
-    public class AddAnimeToWatchListRequest
+    public class AddAnimeFromAniList
     {
         public string UserId { get; set; }
 

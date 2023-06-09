@@ -34,7 +34,9 @@ namespace HisashiburiDana.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
             services.AddScoped<IAnimeListManager, AnimeListManager>();
-            services.AddScoped<IUserAnimeRepository, UserAnimeRepository>();
+            services.AddScoped<IToWatchAnimeRepository, ToWatchAnimeRepository>();
+            services.AddScoped<ICurrentlyWatchingAnimeRepository, CurrentlyWatchingAnimeRepository>();
+            services.AddScoped<IAlreadyWatchedAnimeRepository, AlreadyWatchedAnimeRepository>();            
             services.AddScoped<IAnimeRankRepository, AnimeRankRepository>();
             services.AddSingleton<IRequestSender, RequestSender>();
             

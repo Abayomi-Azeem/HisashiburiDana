@@ -15,12 +15,15 @@ namespace HisashiburiDana.Infrastructure.Persistence
     {
         private readonly DynamoDBContext _context;
 
-        public UnitOfWork(IAmazonDynamoDB client, IUserRepository userRepo, IAnimeRankRepository animeRepo, IUserAnimeRepository userAnime)
+        public UnitOfWork(IAmazonDynamoDB client, IUserRepository userRepo, IAnimeRankRepository animeRepo, IToWatchAnimeRepository toWatchAnime, ICurrentlyWatchingAnimeRepository watchingAnime, IAlreadyWatchedAnimeRepository watchedAnime)
         {
             _context = new DynamoDBContext(client);
             UserRepo = userRepo;
-            UserAnimeRepo = userAnime;
+            ToWatchAnimeRepo = toWatchAnime;
             AnimeRankingsRepo = animeRepo;
+            WatchedAnimeRepo = watchedAnime;
+            WatchingAnimeRepo = watchingAnime;
+
         }
 
 
@@ -29,9 +32,13 @@ namespace HisashiburiDana.Infrastructure.Persistence
 
         public IUserRepository UserRepo { get; set; }
 
-        public IUserAnimeRepository UserAnimeRepo { get; set; }
+        public IToWatchAnimeRepository ToWatchAnimeRepo { get; set; }
 
         public IAnimeRankRepository AnimeRankingsRepo { get; set; }
+
+        public IAlreadyWatchedAnimeRepository WatchedAnimeRepo { get; set; }
+
+        public ICurrentlyWatchingAnimeRepository WatchingAnimeRepo { get; set; }
         
         
         public void Dispose()

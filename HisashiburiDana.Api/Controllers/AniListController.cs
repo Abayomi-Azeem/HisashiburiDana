@@ -30,5 +30,17 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(response);
         }
+
+        [Route("getgenres")]
+        [HttpGet]
+        public async Task<IActionResult> GetGenres()
+        {
+            var response = await _anilistService.GetAllGenres();
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

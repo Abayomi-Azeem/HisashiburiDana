@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HisashiburiDana.Application.Abstractions.Infrastucture.IPersistence.IRepository
 {
-    public interface IUserAnimeRepository : IGenericRepository<ToWatchAnimes>
+    public interface IToWatchAnimeRepository : IGenericRepository<ToWatchAnimes>
     {
     
 

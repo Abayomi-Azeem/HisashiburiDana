@@ -24,11 +24,11 @@ namespace HisashiburiDana.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeToWatchListRequest request)
+        public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeFromAniList request)
         {
             var response = new GeneralResponseWrapper<bool>();
 
-            var validator = new AddToWatchlistValidator().Validate(request);
+            var validator = new AddAnimeFromAnilistValidator().Validate(request);
 
             if (!validator.IsValid)
             {
@@ -52,7 +52,7 @@ namespace HisashiburiDana.Application.Services
                     rankiIds.Add(rank.Id);
                 }
                 var addtoWatchlistentitywithRanks = addtoWatchlistentity.AddRankingId(addtoWatchlistentity, rankiIds);
-                await _unitOfWork.UserAnimeRepo.InsertAsync(addtoWatchlistentitywithRanks);
+                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(addtoWatchlistentitywithRanks);
                 return response.BuildSuccessResponse(true);
                  
             }
@@ -61,6 +61,89 @@ namespace HisashiburiDana.Application.Services
                 Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
                  
+            }
+        }
+    
+        public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToAlreadyWatched(AddAnimeFromAniList request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new AddAnimeFromAnilistValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+                var addToAlreadyWatched = WatchedAnimes.Create(request);
+                List<string> rankiIds = new();
+                foreach (var ranking in request.Media.Rankings)
+                {
+                    var rank = Rankings.Create(ranking, request.UserId);
+                    await _unitOfWork.AnimeRankingsRepo.InsertAsync(rank);
+                    rankiIds.Add(rank.Id);
+                }
+                var addtowatchedwithRanks = addToAlreadyWatched.AddRankingId(addToAlreadyWatched, rankiIds);
+                await _unitOfWork.WatchedAnimeRepo.InsertAsync(addtowatchedwithRanks);
+                return response.BuildSuccessResponse(true);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+
+            }
+
+
+
+        }
+        
+        public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToCurrentlyWatching(AddAnimeFromAniList request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new AddAnimeFromAnilistValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+                var addToCurrentlyWatching = WatchingAnimes.Create(request);
+                List<string> rankiIds = new();
+                foreach (var ranking in request.Media.Rankings)
+                {
+                    var rank = Rankings.Create(ranking, request.UserId);
+                    await _unitOfWork.AnimeRankingsRepo.InsertAsync(rank);
+                    rankiIds.Add(rank.Id);
+                }
+                var addtowatchingwithRanks = addToCurrentlyWatching.AddRankingId(addToCurrentlyWatching, rankiIds);
+                await _unitOfWork.WatchingAnimeRepo.InsertAsync(addtowatchingwithRanks);
+                return response.BuildSuccessResponse(true);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+
             }
         }
     }

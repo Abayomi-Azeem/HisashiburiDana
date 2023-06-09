@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace HisashiburiDana.Application.Validators
 {
-    public class AddToWatchlistValidator: AbstractValidator<AddAnimeToWatchListRequest>
+    public class AddAnimeFromAnilistValidator: AbstractValidator<AddAnimeFromAniList>
     {
-        public AddToWatchlistValidator()
+        public AddAnimeFromAnilistValidator()
         {
             RuleFor(x => x.UserId).NotNull().NotEmpty();
             RuleFor(x => x.Media).NotNull();

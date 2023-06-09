@@ -37,7 +37,6 @@ namespace HisashiburiDana.Application.Services
              return response.BuildSuccessResponse(animes);
         }
 
-
         public async Task<GeneralResponseWrapper<AllGenres>> GetAllGenres()
         {
             var response = new GeneralResponseWrapper<AllGenres>();
@@ -54,5 +53,7 @@ namespace HisashiburiDana.Application.Services
             }
             return response.BuildSuccessResponse(genres);
         }
+    
+        
     }
 }
