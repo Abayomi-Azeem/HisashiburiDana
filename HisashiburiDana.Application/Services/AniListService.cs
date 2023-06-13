@@ -53,7 +53,22 @@ namespace HisashiburiDana.Application.Services
             }
             return response.BuildSuccessResponse(genres);
         }
-    
-        
+
+        public async Task<GeneralResponseWrapper<AnimeList>> GetTrendingAnime()
+        {
+            var response = new GeneralResponseWrapper<AnimeList>();
+
+            var animes = await _animelistManager.GetTrendingAnimes();
+
+            if (response == null)
+            {
+                var errors = new List<string>()
+                {
+                    "An Error Occurred"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+            return response.BuildSuccessResponse(animes);
+        }
     }
 }

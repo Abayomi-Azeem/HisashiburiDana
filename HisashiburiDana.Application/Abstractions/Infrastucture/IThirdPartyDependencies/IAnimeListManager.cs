@@ -12,5 +12,6 @@ namespace HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDepen
         Task<AnimeList> GetAnimes(string pageNumber);
 
         Task<AllGenres?> GetAllGenres();
+        Task<AnimeList> GetTrendingAnimes();
     }
 }

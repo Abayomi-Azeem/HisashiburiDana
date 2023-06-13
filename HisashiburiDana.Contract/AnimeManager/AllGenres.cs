@@ -10,4 +10,9 @@ namespace HisashiburiDana.Contract.AnimeManager
     {
         public List<string> GenreCollection { get; set; }
     }
+
+    public class Data
+    {
+        public List<string> GenreCollection { get; set; }
+    }
 }

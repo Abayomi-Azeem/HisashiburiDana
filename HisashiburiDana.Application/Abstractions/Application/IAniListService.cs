@@ -13,5 +13,6 @@ namespace HisashiburiDana.Application.Abstractions.Application
         Task<GeneralResponseWrapper<AnimeList>> GetAnimes(int pageNumber);
 
         Task<GeneralResponseWrapper<AllGenres>> GetAllGenres();
+        Task<GeneralResponseWrapper<AnimeList>> GetTrendingAnime();
     }
 }
