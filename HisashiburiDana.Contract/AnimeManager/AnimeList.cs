@@ -46,7 +46,7 @@ namespace HisashiburiDana.Contract.AnimeManager
 
     public class CoverImage
     {
-        public string? Medium { get; set; }
+        public string? ExtraLarge { get; set; }
     }
         
     public class EndDate
