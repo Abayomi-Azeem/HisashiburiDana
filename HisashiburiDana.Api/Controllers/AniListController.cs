@@ -55,5 +55,8 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
     
+        //Sort by Title, No of Episodes, etc
+
+        //Filter by Genre
     }
 }

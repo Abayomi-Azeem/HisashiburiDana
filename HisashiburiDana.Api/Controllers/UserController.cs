@@ -61,7 +61,18 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
-        //addToCurrentlywatching
+        [HttpPost]
+        [Route("movetocurrentlywatchingfromwatchlist")]
+        public async Task<IActionResult> MoveToCurrentlyWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToCurrentlyWatchingFromWatchList(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
         //moveToCurrentlywatching
 

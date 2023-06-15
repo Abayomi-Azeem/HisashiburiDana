@@ -66,16 +66,16 @@ namespace HisashiburiDana.Infrastructure.Persistence.Repository
         }
 
         
-        public async void Delete(TEntity entity)
+        public async Task Delete(TEntity entity)
         {
             await _context.DeleteAsync(entity);
         }
 
         
 
-        public void Update(TEntity entity)
+        public async Task Update(TEntity entity)
         {
-             _context.SaveAsync(entity);
+             await _context.SaveAsync(entity);
         }
 
         

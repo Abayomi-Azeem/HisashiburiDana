@@ -1,4 +1,5 @@
-﻿using HisashiburiDana.Application.Abstractions.Application;
+﻿using FluentValidation;
+using HisashiburiDana.Application.Abstractions.Application;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Validators;
 using HisashiburiDana.Contract.AnimeManager;
@@ -51,7 +52,7 @@ namespace HisashiburiDana.Application.Services
                     await _unitOfWork.AnimeRankingsRepo.InsertAsync(rank);
                     rankiIds.Add(rank.Id);
                 }
-                var addtoWatchlistentitywithRanks = addtoWatchlistentity.AddRankingId(addtoWatchlistentity, rankiIds);
+                var addtoWatchlistentitywithRanks = ToWatchAnimes.AddRankingId(addtoWatchlistentity, rankiIds);
                 await _unitOfWork.ToWatchAnimeRepo.InsertAsync(addtoWatchlistentitywithRanks);
                 return response.BuildSuccessResponse(true);
                  
@@ -91,7 +92,7 @@ namespace HisashiburiDana.Application.Services
                     await _unitOfWork.AnimeRankingsRepo.InsertAsync(rank);
                     rankiIds.Add(rank.Id);
                 }
-                var addtowatchedwithRanks = addToAlreadyWatched.AddRankingId(addToAlreadyWatched, rankiIds);
+                var addtowatchedwithRanks = WatchedAnimes.AddRankingId(addToAlreadyWatched, rankiIds);
                 await _unitOfWork.WatchedAnimeRepo.InsertAsync(addtowatchedwithRanks);
                 return response.BuildSuccessResponse(true);
 
@@ -134,7 +135,7 @@ namespace HisashiburiDana.Application.Services
                     await _unitOfWork.AnimeRankingsRepo.InsertAsync(rank);
                     rankiIds.Add(rank.Id);
                 }
-                var addtowatchingwithRanks = addToCurrentlyWatching.AddRankingId(addToCurrentlyWatching, rankiIds);
+                var addtowatchingwithRanks = WatchingAnimes.AddRankingId(addToCurrentlyWatching, rankiIds);
                 await _unitOfWork.WatchingAnimeRepo.InsertAsync(addtowatchingwithRanks);
                 return response.BuildSuccessResponse(true);
 
@@ -144,6 +145,61 @@ namespace HisashiburiDana.Application.Services
                 Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
 
+            }
+        }
+    
+        public async Task<GeneralResponseWrapper<bool>> MoveToCurrentlyWatchingFromWatchList(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+                
+                ToWatchAnimes? anime = await _unitOfWork.ToWatchAnimeRepo.GetById(request.AnimeId);
+                
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                WatchingAnimes watchingAnime = WatchingAnimes.Create(anime);
+
+                await _unitOfWork.WatchingAnimeRepo.InsertAsync(watchingAnime);
+
+                await _unitOfWork.ToWatchAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToCurrentlyWatchingFromWatchList -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
     }

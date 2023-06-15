@@ -63,7 +63,7 @@ namespace HisashiburiDana.Domain.Entities
             return new(request);
         }
 
-        public ToWatchAnimes AddRankingId(ToWatchAnimes anime, List<string> rankIds)
+        public static ToWatchAnimes AddRankingId(ToWatchAnimes anime, List<string> rankIds)
         {
             anime.RankingId = string.Join(",", rankIds);
             return anime;
