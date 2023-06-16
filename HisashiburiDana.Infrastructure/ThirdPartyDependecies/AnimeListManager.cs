@@ -160,5 +160,69 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
             }
             return null;
         }
+
+        public async Task<AnimeList> SearchAnimes(string animeName)
+        {
+            string query = $@"{{
+        Page(page:1, perPage:10){{
+            pageInfo{{
+                total
+                currentPage
+                lastPage
+                hasNextPage
+                perPage
+            }}
+    
+            media(search: ""{animeName}"") {{
+                id
+                title {{
+                    english
+                    romaji
+                }}
+                description
+                startDate {{
+                    day
+                    month
+                    year
+                }}
+                endDate {{
+                    day
+                    month
+                    year
+                }}
+                status
+                siteUrl
+                coverImage {{
+                    extraLarge
+                }}
+                episodes
+                genres
+                rankings {{
+                    rank
+                    allTime
+                    context
+                    type
+                    format
+                }} 
+                siteUrl           
+            }}      
+        }}
+    }}";
+
+
+            var request = new GraphQLRequest
+            {
+                Query = query
+            };
+
+            var response = await _sender.SendGraphQLMessage<AnimeList>(request);
+
+            if (response.Errors == null)
+            {
+                return response.Data;
+            }
+            return null;
+        }
+
     }
 }

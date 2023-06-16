@@ -57,10 +57,10 @@ namespace HisashiburiDana.Api.Controllers
 
         [Route("searchanime")]
         [HttpPost]
-        public async Task<IActionResult> SearchAnime(string animeName, int pageNumber = 1)
+        public async Task<IActionResult> SearchAnime(string animeName)
         {
-            var response = await _anilistService.SearchInAnimeList(animeName,pageNumber);
-            if (response == null)
+            var response = await _anilistService.SearchInAnimeList(animeName);
+            if (response.HasError)
             {
                 return BadRequest(response);
             }
