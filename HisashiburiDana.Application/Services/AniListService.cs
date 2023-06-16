@@ -77,8 +77,42 @@ namespace HisashiburiDana.Application.Services
             }
             return response.BuildSuccessResponse(animes);
         }
-    
-        
-    
+
+        public async Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName, int pageNumber)
+        {
+            var response = new GeneralResponseWrapper<AnimeList>();
+            var mediumList = new List<Medium>();
+            var animes = await _animelistManager.GetAnimes(pageNumber.ToString());
+            var searchResults = animes.Page.Media;
+            foreach(var anime in searchResults)
+            {
+                if(anime.Title.English != null && anime.Title.Romaji != null)
+                {
+                    if(anime.Title.English.Contains(animeName) || anime.Title.Romaji.Contains(animeName))
+                    {
+                        mediumList.Add(anime);
+                    }
+                }
+            }
+            var animelist = new AnimeList
+            {
+                Page = new Page
+                {
+                    Media = mediumList,
+                    PageInfo = null
+                }
+            };
+
+            if (response == null)
+            {
+                var errors = new List<string>()
+                {
+                    "An Error Occurred"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+            return response.BuildSuccessResponse(animelist);
+
+        }
     }
 }
