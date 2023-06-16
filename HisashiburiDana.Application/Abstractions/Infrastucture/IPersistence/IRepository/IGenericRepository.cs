@@ -16,9 +16,9 @@ namespace HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IRe
         Task<List<TEntity>> GetAll(string columnName, ScanOperator ope, string value);
         Task InsertAsync(TEntity entity);
        
-        void Delete(TEntity entity);
+        Task Delete(TEntity entity);
 
-        void Update(TEntity entity);
+        Task Update(TEntity entity);
      
        
     }

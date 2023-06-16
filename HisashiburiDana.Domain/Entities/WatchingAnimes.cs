@@ -28,10 +28,49 @@ namespace HisashiburiDana.Domain.Entities
             DateStartedWatching = DateTime.UtcNow.AddHours(1);
         }
 
+        private WatchingAnimes(ToWatchAnimes toWatchAnimes)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = toWatchAnimes.UserId;
+            Title = toWatchAnimes.Title;
+            Description = toWatchAnimes.Description;
+            StartDate = toWatchAnimes.StartDate;
+            EndDate = toWatchAnimes.EndDate;
+            Status = toWatchAnimes.Status;
+            SiteUrl = toWatchAnimes.SiteUrl;
+            CoverUrl = toWatchAnimes.CoverUrl;
+            Episodes = toWatchAnimes.Episodes;
+            Genres = toWatchAnimes.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            DateStartedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = toWatchAnimes.RankingId;
+        }
+
+        private WatchingAnimes(WatchedAnimes anime)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = anime.UserId;
+            Title = anime.Title;
+            Description = anime.Description;
+            StartDate = anime.StartDate;
+            EndDate = anime.EndDate;
+            Status = anime.Status;
+            SiteUrl = anime.SiteUrl;
+            CoverUrl = anime.CoverUrl;
+            Episodes = anime.Episodes;
+            Genres = anime.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            DateStartedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = anime.RankingId;
+        }
+
+
         public WatchingAnimes()
         {
 
         }
+
+        
 
         [DynamoDBHashKey]
         public string Id { get; private set; }
@@ -68,11 +107,20 @@ namespace HisashiburiDana.Domain.Entities
             return new(request);
         }
 
-        public WatchingAnimes AddRankingId(WatchingAnimes anime, List<string> rankIds)
+        public static WatchingAnimes AddRankingId(WatchingAnimes anime, List<string> rankIds)
         {
             anime.RankingId = string.Join(",", rankIds);
             return anime;
         }
 
+        public static WatchingAnimes Create(ToWatchAnimes toWatchAnimes)
+        {
+            return new(toWatchAnimes);
+        }
+
+        public static WatchingAnimes Create(WatchedAnimes anime)
+        {
+            return new(anime);
+        }
     }
 }
