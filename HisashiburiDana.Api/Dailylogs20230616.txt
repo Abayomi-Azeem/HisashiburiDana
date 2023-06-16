@@ -1,0 +1,36 @@
+2023-06-16 18:13:30.247 +01:00 [INF] Starting Application at ==> 6/16/2023 6:13:30 PM
+2023-06-16 18:13:30.752 +01:00 [INF] User profile is available. Using 'C:\Users\Ibrahim.dahiru\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-06-16 18:13:31.013 +01:00 [INF] Now listening on: https://localhost:7008
+2023-06-16 18:13:31.014 +01:00 [INF] Now listening on: http://localhost:5008
+2023-06-16 18:13:31.018 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-06-16 18:13:31.018 +01:00 [INF] Hosting environment: Development
+2023-06-16 18:13:31.020 +01:00 [INF] Content root path: C:\Users\Ibrahim.dahiru\source\repos\HisashiburiDana\HisashiburiDana.Api\
+2023-06-16 18:13:31.669 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7008/swagger/index.html - -
+2023-06-16 18:13:32.114 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7008/swagger/index.html - - - 200 - text/html;charset=utf-8 447.8536ms
+2023-06-16 18:13:32.140 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7008/_vs/browserLink - -
+2023-06-16 18:13:32.142 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7008/_framework/aspnetcore-browser-refresh.js - -
+2023-06-16 18:13:32.151 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7008/_framework/aspnetcore-browser-refresh.js - - - 200 12008 application/javascript;+charset=utf-8 9.0724ms
+2023-06-16 18:13:32.170 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7008/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 29.5286ms
+2023-06-16 18:13:32.297 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7008/swagger/v1/swagger.json - -
+2023-06-16 18:13:32.447 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7008/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 149.6592ms
+2023-06-16 18:14:01.455 +01:00 [INF] Request starting HTTP/2 POST https://localhost:7008/api/Authentication/login application/json 60
+2023-06-16 18:14:01.474 +01:00 [INF] CORS policy execution successful.
+2023-06-16 18:14:01.589 +01:00 [INF] Executing endpoint 'HisashiburiDana.Api.Controllers.AuthenticationController.Login (HisashiburiDana.Api)'
+2023-06-16 18:14:01.633 +01:00 [INF] Route matched with {action = "Login", controller = "Authentication"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(HisashiburiDana.Contract.Authentication.LoginRequest) on controller HisashiburiDana.Api.Controllers.AuthenticationController (HisashiburiDana.Api).
+2023-06-16 18:14:01.640 +01:00 [INF] Using AWS credentials specified with the AWSOptions.Credentials property
+2023-06-16 18:14:33.606 +01:00 [INF] Login Request Arrived ---ibrahim@dahiru.com
+2023-06-16 18:14:35.330 +01:00 [INF] LoginUser Success Response Sent
+2023-06-16 18:14:35.351 +01:00 [INF] Executing OkObjectResult, writing value of type 'HisashiburiDana.Contract.Common.GeneralResponseWrapper`1[[HisashiburiDana.Contract.Authentication.LoginResponse, HisashiburiDana.Contract, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2023-06-16 18:14:35.388 +01:00 [INF] Executed action HisashiburiDana.Api.Controllers.AuthenticationController.Login (HisashiburiDana.Api) in 33741.9068ms
+2023-06-16 18:14:35.396 +01:00 [INF] Executed endpoint 'HisashiburiDana.Api.Controllers.AuthenticationController.Login (HisashiburiDana.Api)'
+2023-06-16 18:14:35.399 +01:00 [INF] Request finished HTTP/2 POST https://localhost:7008/api/Authentication/login application/json 60 - 200 - application/json;+charset=utf-8 33943.9112ms
+2023-06-16 18:15:00.987 +01:00 [INF] Request starting HTTP/2 POST https://localhost:7008/api/AniList/searchanime?animeName=Trigun%20 - 0
+2023-06-16 18:15:00.988 +01:00 [INF] CORS policy execution successful.
+2023-06-16 18:15:01.114 +01:00 [INF] Executing endpoint 'HisashiburiDana.Api.Controllers.AniListController.SearchAnime (HisashiburiDana.Api)'
+2023-06-16 18:15:01.118 +01:00 [INF] Route matched with {action = "SearchAnime", controller = "AniList"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] SearchAnime(System.String) on controller HisashiburiDana.Api.Controllers.AniListController (HisashiburiDana.Api).
+2023-06-16 18:15:01.206 +01:00 [INF] Search Anime Request arrived -----
+2023-06-16 18:15:02.266 +01:00 [INF] SearchInAnimeList Success Response Sent
+2023-06-16 18:15:02.267 +01:00 [INF] Executing OkObjectResult, writing value of type 'HisashiburiDana.Contract.Common.GeneralResponseWrapper`1[[HisashiburiDana.Contract.AnimeManager.AnimeList, HisashiburiDana.Contract, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2023-06-16 18:15:02.296 +01:00 [INF] Executed action HisashiburiDana.Api.Controllers.AniListController.SearchAnime (HisashiburiDana.Api) in 1175.4057ms
+2023-06-16 18:15:02.298 +01:00 [INF] Executed endpoint 'HisashiburiDana.Api.Controllers.AniListController.SearchAnime (HisashiburiDana.Api)'
+2023-06-16 18:15:02.300 +01:00 [INF] Request finished HTTP/2 POST https://localhost:7008/api/AniList/searchanime?animeName=Trigun%20 - 0 - 200 - application/json;+charset=utf-8 1313.2684ms

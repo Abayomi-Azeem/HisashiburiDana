@@ -164,7 +164,7 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
         public async Task<AnimeList> SearchAnimes(string animeName)
         {
             string query = $@"{{
-        Page(page:1, perPage:10){{
+        Page(page:1, perPage:20){{
             pageInfo{{
                 total
                 currentPage
