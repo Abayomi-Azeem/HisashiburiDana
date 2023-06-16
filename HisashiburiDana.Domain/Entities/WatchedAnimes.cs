@@ -22,7 +22,7 @@ namespace HisashiburiDana.Domain.Entities
             EndDate = new DateTime(request.Media.EndDate.Year ?? 0, request.Media.EndDate.Month ?? 0, request.Media.EndDate.Day ?? 0);
             Status = request.Media.Status;
             SiteUrl = request.Media.SiteUrl;
-            CoverUrl = request.Media.CoverImage.Medium;
+            CoverUrl = request.Media.CoverImage.ExtraLarge;
             Episodes = request.Media.Episodes;
             Genres = String.Join(",", request.Media.Genres);
             DateAdded = DateTime.UtcNow.AddHours(1);

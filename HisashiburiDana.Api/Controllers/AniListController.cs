@@ -44,7 +44,7 @@ namespace HisashiburiDana.Api.Controllers
         }
 
         [Route("gettrendinganimes")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetTrending()
         {
             var response = await _anilistService.GetTrendingAnime();

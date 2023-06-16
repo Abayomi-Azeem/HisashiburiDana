@@ -79,6 +79,8 @@ namespace HisashiburiDana.Application.Services
                 Id  = user.Id,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
+                FirstName = user.FirstName,
+                LastName = user.LastName
             };
             return response.BuildSuccessResponse(loginResponse); 
             
