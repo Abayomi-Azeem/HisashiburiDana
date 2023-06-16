@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DocumentModel;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
+using Microsoft.Extensions.Logging;
 
 namespace HisashiburiDana.Application.Services
 {
@@ -19,16 +20,19 @@ namespace HisashiburiDana.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenGenerator _tokenGeneratior;
+        private readonly ILogger<AuthenticationService> _logger;
 
-        public AuthenticationService(IUnitOfWork unitOfWork, ITokenGenerator tokenGeneratior)
+        public AuthenticationService(IUnitOfWork unitOfWork, ITokenGenerator tokenGeneratior, ILogger<AuthenticationService> logger)
         {
             _unitOfWork = unitOfWork;
             _tokenGeneratior = tokenGeneratior;
+            _logger = logger;
         }
 
         public async Task<GeneralResponseWrapper<LoginResponse>> LoginUser(LoginRequest request)
         {
-            GeneralResponseWrapper<LoginResponse> response = new();
+            _logger.LogInformation($"Login Request Arrived ---{request.Email}");
+            GeneralResponseWrapper<LoginResponse> response = new(_logger);
             //validate request
             var validator = new LoginRequestValidator().Validate(request);
             if (!validator.IsValid)
@@ -89,7 +93,8 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<bool?>> RegisterNewUser(RegisterRequest request)
         {
-            GeneralResponseWrapper<bool?> response = new();
+            _logger.LogInformation($"Registration Request Arrived ---{request.Email}");
+            GeneralResponseWrapper<bool?> response = new(_logger);
             
             //validate request
             var validator = new RegisterValidator().Validate(request);

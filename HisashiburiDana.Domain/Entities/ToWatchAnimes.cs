@@ -28,7 +28,43 @@ namespace HisashiburiDana.Domain.Entities
 
         }
 
+        private ToWatchAnimes(WatchedAnimes anime)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = anime.UserId;
+            Title = anime.Title;
+            Description = anime.Description;
+            StartDate = anime.StartDate;
+            EndDate = anime.EndDate;
+            Status = anime.Status;
+            SiteUrl = anime.SiteUrl;
+            CoverUrl = anime.CoverUrl;
+            Episodes = anime.Episodes;
+            Genres = anime.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            RankingId = anime.RankingId;
+        }
+
+        public ToWatchAnimes(WatchingAnimes anime)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = anime.UserId;
+            Title = anime.Title;
+            Description = anime.Description;
+            StartDate = anime.StartDate;
+            EndDate = anime.EndDate;
+            Status = anime.Status;
+            SiteUrl = anime.SiteUrl;
+            CoverUrl = anime.CoverUrl;
+            Episodes = anime.Episodes;
+            Genres = anime.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            RankingId = anime.RankingId;
+        }
+
         public ToWatchAnimes()   {   }
+
+        
 
         [DynamoDBHashKey]
         public string Id { get; private set; }
@@ -63,10 +99,21 @@ namespace HisashiburiDana.Domain.Entities
             return new(request);
         }
 
-        public ToWatchAnimes AddRankingId(ToWatchAnimes anime, List<string> rankIds)
+        public static ToWatchAnimes Create(WatchedAnimes anime)
+        {
+            return new(anime);
+        }
+
+        public static ToWatchAnimes Create(WatchingAnimes anime)
+        {
+            return new(anime);
+        }
+        public static ToWatchAnimes AddRankingId(ToWatchAnimes anime, List<string> rankIds)
         {
             anime.RankingId = string.Join(",", rankIds);
             return anime;
         }
+
+        
     }
 }

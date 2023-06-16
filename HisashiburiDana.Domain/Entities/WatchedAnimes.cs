@@ -12,7 +12,7 @@ namespace HisashiburiDana.Domain.Entities
     [DynamoDBTable("WatchedAnimes")]
     public class WatchedAnimes
     {
-        public WatchedAnimes(AddAnimeFromAniList request)
+        private WatchedAnimes(AddAnimeFromAniList request)
         {
             Id = Guid.NewGuid().ToString();
             UserId = request.UserId;
@@ -28,10 +28,50 @@ namespace HisashiburiDana.Domain.Entities
             DateAdded = DateTime.UtcNow.AddHours(1);
         }
 
+        private WatchedAnimes(ToWatchAnimes toWatchAnimes)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = toWatchAnimes.UserId;
+            Title = toWatchAnimes.Title;
+            Description = toWatchAnimes.Description;
+            StartDate = toWatchAnimes.StartDate;
+            EndDate = toWatchAnimes.EndDate;
+            Status = toWatchAnimes.Status;
+            SiteUrl = toWatchAnimes.SiteUrl;
+            CoverUrl = toWatchAnimes.CoverUrl;
+            Episodes = toWatchAnimes.Episodes;
+            Genres = toWatchAnimes.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            DateStartedWatching = toWatchAnimes.DateAdded;
+            DateFininshedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = toWatchAnimes.RankingId;
+        }
+
+        private WatchedAnimes(WatchingAnimes anime)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = anime.UserId;
+            Title = anime.Title;
+            Description = anime.Description;
+            StartDate = anime.StartDate;
+            EndDate = anime.EndDate;
+            Status = anime.Status;
+            SiteUrl = anime.SiteUrl;
+            CoverUrl = anime.CoverUrl;
+            Episodes = anime.Episodes;
+            Genres = anime.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            DateStartedWatching = anime.DateAdded;
+            DateFininshedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = anime.RankingId;
+        }
+
         public WatchedAnimes()
         {
 
         }
+
+        
 
         [DynamoDBHashKey]
         public string Id { get; set; }
@@ -70,10 +110,20 @@ namespace HisashiburiDana.Domain.Entities
             return new(request);
         }
 
-        public WatchedAnimes AddRankingId(WatchedAnimes anime, List<string> rankIds)
+        public static WatchedAnimes AddRankingId(WatchedAnimes anime, List<string> rankIds)
         {
             anime.RankingId = string.Join(",", rankIds);
             return anime;
+        }
+
+        public static WatchedAnimes Create(ToWatchAnimes anime)
+        {
+            return new(anime);
+        }
+    
+        public static WatchedAnimes Create(WatchingAnimes anime)
+        {
+            return new(anime);
         }
     }
 }
