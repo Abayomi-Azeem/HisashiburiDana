@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +11,9 @@ namespace HisashiburiDana.Contract.Common
 {
     public class GeneralResponseWrapper<T>
     {
+        private readonly ILogger _logger;
+
+
         public GeneralResponseWrapper(T data)
         {
             Data = data;
@@ -23,9 +29,9 @@ namespace HisashiburiDana.Contract.Common
             TimeGenerated = DateTime.UtcNow.AddHours(1);
         }
 
-        public GeneralResponseWrapper()
+        public GeneralResponseWrapper(ILogger logger)
         {
-
+            _logger = logger;
         }
 
         public T? Data { get; set; }
@@ -38,13 +44,15 @@ namespace HisashiburiDana.Contract.Common
 
         
         
-        public GeneralResponseWrapper<T> BuildSuccessResponse(T data)
+        public GeneralResponseWrapper<T> BuildSuccessResponse(T data, [CallerMemberName] string caller = "")
         {
+            _logger.LogInformation($"{caller} Success Response Sent");
             return new(data);
         } 
 
-        public GeneralResponseWrapper<T> BuildFailureResponse(List<string> errors)
+        public GeneralResponseWrapper<T> BuildFailureResponse(List<string> errors, [CallerMemberName] string caller = "")
         {
+            _logger.LogInformation($"{caller} Failure response {string.Join(" , ",errors)}");
             return new(errors);
         }
     }

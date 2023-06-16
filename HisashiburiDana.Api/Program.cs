@@ -1,7 +1,11 @@
 using HisashiburiDana.Api.Filters;
 using HisashiburiDana.Application;
+using HisashiburiDana.Application.MiddleWares;
 using HisashiburiDana.Infrastructure;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +48,20 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
+var logger = new LoggerConfiguration()
+                    .WriteTo.Console()
+                    .WriteTo.File(new JsonFormatter(), "important-Logs.json", restrictedToMinimumLevel: LogEventLevel.Warning)
+                    .WriteTo.File("./Dailylogs.txt", rollingInterval: RollingInterval.Day)
+                    .MinimumLevel.Information()
+                    .CreateLogger();
 
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddSerilog(logger, dispose: true);
+});
+//builder.Services.AddSingleton<Serilog.ILogger>(logger);
+logger.Information($"Starting Application at ==> {DateTime.UtcNow.AddHours(1)}");
 builder.Services.AddApplication()
     .AddAInfrastructure(builder.Configuration);
 
@@ -62,6 +79,7 @@ app.UseSwaggerUI(
     c => c.SwaggerEndpoint("../swagger/v1/swagger.json", "HisashiburiDana.Api")
     );
 
+app.UseMiddleware<ExceptionMiddleWare>();
 app.UseHttpsRedirection();
 
 app.UseCors();

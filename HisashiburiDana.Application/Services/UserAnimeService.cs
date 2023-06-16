@@ -6,6 +6,8 @@ using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Common;
 using HisashiburiDana.Contract.Users;
 using HisashiburiDana.Domain.Entities;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace HisashiburiDana.Application.Services
     public class UserAnimeService : IUserAnimeService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<UserAnimeService> _logger;
 
         public UserAnimeService(IUnitOfWork unitOfWork)
         {
@@ -27,7 +30,8 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeFromAniList request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"AddNewAnimeToWatchList Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new AddAnimeFromAnilistValidator().Validate(request);
 
@@ -46,6 +50,7 @@ namespace HisashiburiDana.Application.Services
             {
                 var addtoWatchlistentity = ToWatchAnimes.Create(request);
                 List<string> rankiIds = new();
+                _logger.LogInformation($"Created AddToWatchListEntity Successfully for UserId ---{request.UserId}");
                 foreach (var ranking in request.Media.Rankings)
                 {
                     var rank = Rankings.Create(ranking, request.UserId);
@@ -53,13 +58,14 @@ namespace HisashiburiDana.Application.Services
                     rankiIds.Add(rank.Id);
                 }
                 var addtoWatchlistentitywithRanks = ToWatchAnimes.AddRankingId(addtoWatchlistentity, rankiIds);
+                _logger.LogInformation($"Added RankingIds Successfully for UserId ---{request.UserId}");
                 await _unitOfWork.ToWatchAnimeRepo.InsertAsync(addtoWatchlistentitywithRanks);
                 return response.BuildSuccessResponse(true);
                  
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
                  
             }
@@ -67,7 +73,8 @@ namespace HisashiburiDana.Application.Services
     
         public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToAlreadyWatched(AddAnimeFromAniList request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"AddNewAnimeToAlready Watched Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new AddAnimeFromAnilistValidator().Validate(request);
 
@@ -85,6 +92,8 @@ namespace HisashiburiDana.Application.Services
             try
             {
                 var addToAlreadyWatched = WatchedAnimes.Create(request);
+                _logger.LogInformation($"Created addToAlreadyWatched Successfully for UserId ---{request.UserId}");
+
                 List<string> rankiIds = new();
                 foreach (var ranking in request.Media.Rankings)
                 {
@@ -93,13 +102,14 @@ namespace HisashiburiDana.Application.Services
                     rankiIds.Add(rank.Id);
                 }
                 var addtowatchedwithRanks = WatchedAnimes.AddRankingId(addToAlreadyWatched, rankiIds);
+                _logger.LogInformation($"Added RankingIds Successfully for UserId ---{request.UserId}");
                 await _unitOfWork.WatchedAnimeRepo.InsertAsync(addtowatchedwithRanks);
                 return response.BuildSuccessResponse(true);
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in AddNewAnimeToAlreadyWatched -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
 
             }
@@ -110,7 +120,9 @@ namespace HisashiburiDana.Application.Services
         
         public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToCurrentlyWatching(AddAnimeFromAniList request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"AddNewAnimeToCurrentlyWatching Watched Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new AddAnimeFromAnilistValidator().Validate(request);
 
@@ -128,6 +140,8 @@ namespace HisashiburiDana.Application.Services
             try
             {
                 var addToCurrentlyWatching = WatchingAnimes.Create(request);
+                _logger.LogInformation($"Created addToCurrentlyWatching Successfully for UserId ---{request.UserId}");
+
                 List<string> rankiIds = new();
                 foreach (var ranking in request.Media.Rankings)
                 {
@@ -136,13 +150,15 @@ namespace HisashiburiDana.Application.Services
                     rankiIds.Add(rank.Id);
                 }
                 var addtowatchingwithRanks = WatchingAnimes.AddRankingId(addToCurrentlyWatching, rankiIds);
+                _logger.LogInformation($"Added RankingIds Successfully for UserId ---{request.UserId}");
+
                 await _unitOfWork.WatchingAnimeRepo.InsertAsync(addtowatchingwithRanks);
                 return response.BuildSuccessResponse(true);
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in AddNewAnimeToCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
 
             }
@@ -150,10 +166,10 @@ namespace HisashiburiDana.Application.Services
     
         public async Task<GeneralResponseWrapper<bool>> MoveToCurrentlyWatchingFromWatchList(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToCurrentlyWatchingFromWatchList Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
-
             if (!validator.IsValid)
             {
                 var errors = new List<string>();
@@ -161,7 +177,6 @@ namespace HisashiburiDana.Application.Services
                 {
                     errors.Add(error.ErrorMessage);
                 }
-
                 return response.BuildFailureResponse(errors);
             }
 
@@ -169,7 +184,6 @@ namespace HisashiburiDana.Application.Services
             {
                 
                 ToWatchAnimes? anime = await _unitOfWork.ToWatchAnimeRepo.GetById(request.AnimeId);
-                
                 if (anime == null)
                 {
                     List<string> errors = new()
@@ -191,21 +205,24 @@ namespace HisashiburiDana.Application.Services
                 WatchingAnimes watchingAnime = WatchingAnimes.Create(anime);
 
                 await _unitOfWork.WatchingAnimeRepo.InsertAsync(watchingAnime);
+                _logger.LogInformation($"Created and Inserted watchingAnime Successfully for UserId ---{request.UserId}");
 
                 await _unitOfWork.ToWatchAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from Watchlist Successfully for UserId ---{request.UserId}");
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToCurrentlyWatchingFromWatchList -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToCurrentlyWatchingFromWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
 
         public async Task<GeneralResponseWrapper<bool>> MoveToCurrentlyWatchingFromAlreadyWatched(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToCurrentlyWatchingFromAlreadyWatched Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
 
@@ -246,21 +263,25 @@ namespace HisashiburiDana.Application.Services
                 WatchingAnimes watchedAnime = WatchingAnimes.Create(anime);
 
                 await _unitOfWork.WatchingAnimeRepo.InsertAsync(watchedAnime);
+                _logger.LogInformation($"Created and Inserted watchedAnime Successfully for UserId ---{request.UserId}");
 
                 await _unitOfWork.WatchedAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from Already Watched Successfully for UserId ---{request.UserId}");
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToCurrentlyWatchingFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToCurrentlyWatchingFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
 
         public async Task<GeneralResponseWrapper<bool>> MoveToAlreadyWatchedFromWatchList(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToAlreadyWatchedFromWatchList Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
 
@@ -301,21 +322,26 @@ namespace HisashiburiDana.Application.Services
                 WatchedAnimes watchedAnime = WatchedAnimes.Create(anime);
 
                 await _unitOfWork.WatchedAnimeRepo.InsertAsync(watchedAnime);
+                _logger.LogInformation($"Created and Inserted watchedAnime Successfully for UserId ---{request.UserId}");
 
                 await _unitOfWork.ToWatchAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from WatchList Successfully for UserId ---{request.UserId}");
+
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToAlreadyWatchedFromWatchList -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToAlreadyWatchedFromWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
 
         public async Task<GeneralResponseWrapper<bool>> MoveToAlreadyWatchedFromCurrentlyWatching(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToAlreadyWatchedFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
 
@@ -356,21 +382,26 @@ namespace HisashiburiDana.Application.Services
                 WatchedAnimes watchedAnime = WatchedAnimes.Create(anime);
 
                 await _unitOfWork.WatchedAnimeRepo.InsertAsync(watchedAnime);
+                _logger.LogInformation($"Created and Inserted watchedAnime Successfully for UserId ---{request.UserId}");
 
                 await _unitOfWork.WatchingAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from Currently Watching Successfully for UserId ---{request.UserId}");
+
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToAlreadyWatchedFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToAlreadyWatchedFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
 
         public async Task<GeneralResponseWrapper<bool>> MoveToWatchListFromAlreadyWatched(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToWatchListFromAlreadyWatched Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
 
@@ -408,24 +439,29 @@ namespace HisashiburiDana.Application.Services
                     return response.BuildFailureResponse(errors);
                 }
 
-                ToWatchAnimes watchedAnime = ToWatchAnimes.Create(anime);
+                ToWatchAnimes toWatchdAnime = ToWatchAnimes.Create(anime);
 
-                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(watchedAnime);
+                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(toWatchdAnime);
+                _logger.LogInformation($"Created and Inserted toWatchdAnime Successfully for UserId ---{request.UserId}");
+
 
                 await _unitOfWork.WatchedAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from Already Watched Successfully for UserId ---{request.UserId}");
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToWatchListFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToWatchListFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
     
         public async Task<GeneralResponseWrapper<bool>> MoveToWatchListFromCurrentlyWatching(MoveAnimeWithinUserLists request)
         {
-            var response = new GeneralResponseWrapper<bool>();
+            _logger.LogInformation($"MoveToWatchListFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
 
             var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
 
@@ -463,17 +499,20 @@ namespace HisashiburiDana.Application.Services
                     return response.BuildFailureResponse(errors);
                 }
 
-                ToWatchAnimes watchedAnime = ToWatchAnimes.Create(anime);
+                ToWatchAnimes towatchAnime = ToWatchAnimes.Create(anime);
 
-                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(watchedAnime);
+                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(towatchAnime);
+                _logger.LogInformation($"Created and Inserted toWatchdAnime Successfully for UserId ---{request.UserId}");
 
                 await _unitOfWork.WatchingAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from WatchList Successfully for UserId ---{request.UserId}");
+
 
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred in MoveToWatchListFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in MoveToWatchListFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
