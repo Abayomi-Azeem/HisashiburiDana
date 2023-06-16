@@ -76,14 +76,39 @@ namespace HisashiburiDana.Application.Services
             var response = new GeneralResponseWrapper<AnimeList>();
             var mediumList = new List<Medium>();
             var animes = await _animelistManager.GetAnimes(pageNumber.ToString());
+            var pageinfo = animes.Page.PageInfo;
+            var lastPage = pageinfo.LastPage;
+            var currentPage = pageinfo.CurrentPage;
             var searchResults = animes.Page.Media;
-            foreach(var anime in searchResults)
+            var hasnextpage = pageinfo.HasNextPage;
+
+            foreach (var anime in searchResults)
             {
-                if(anime.Title.English != null && anime.Title.Romaji != null)
+
+                if (anime.Title.English != null && anime.Title.Romaji != null)
                 {
-                    if(anime.Title.English.Contains(animeName) || anime.Title.Romaji.Contains(animeName))
+                    if (anime.Title.English.Contains(animeName) || anime.Title.Romaji.Contains(animeName))
                     {
                         mediumList.Add(anime);
+                    }
+                }
+
+            }
+
+            while (hasnextpage  == true && currentPage <= lastPage)
+            {
+                pageNumber++; // Move to the next page
+                animes = await _animelistManager.GetAnimes(pageNumber.ToString());
+                searchResults = animes.Page.Media;
+                hasnextpage = animes.Page.PageInfo.HasNextPage;
+                foreach (var anime in searchResults)
+                {
+                    if (anime.Title.English != null && anime.Title.Romaji != null)
+                    {
+                        if (anime.Title.English.Contains(animeName) || anime.Title.Romaji.Contains(animeName))
+                        {
+                            mediumList.Add(anime);
+                        }
                     }
                 }
             }
@@ -92,7 +117,7 @@ namespace HisashiburiDana.Application.Services
                 Page = new Page
                 {
                     Media = mediumList,
-                    PageInfo = null
+                    PageInfo = pageinfo
                 }
             };
 
