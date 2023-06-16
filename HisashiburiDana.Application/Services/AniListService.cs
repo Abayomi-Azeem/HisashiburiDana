@@ -78,30 +78,11 @@ namespace HisashiburiDana.Application.Services
             return response.BuildSuccessResponse(animes);
         }
 
-        public async Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName, int pageNumber)
+        public async Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName)
         {
+            _logger.LogInformation($"Search Anime Request arrived -----");
             var response = new GeneralResponseWrapper<AnimeList>(_logger);
-            var mediumList = new List<Medium>();
-            var animes = await _animelistManager.GetAnimes(pageNumber.ToString());
-            var searchResults = animes.Page.Media;
-            foreach(var anime in searchResults)
-            {
-                if(anime.Title.English != null && anime.Title.Romaji != null)
-                {
-                    if(anime.Title.English.Contains(animeName) || anime.Title.Romaji.Contains(animeName))
-                    {
-                        mediumList.Add(anime);
-                    }
-                }
-            }
-            var animelist = new AnimeList
-            {
-                Page = new Page
-                {
-                    Media = mediumList,
-                    PageInfo = null
-                }
-            };
+            var animes = await _animelistManager.SearchAnimes(animeName);
 
             if (response == null)
             {
@@ -111,7 +92,7 @@ namespace HisashiburiDana.Application.Services
                 };
                 return response.BuildFailureResponse(errors);
             }
-            return response.BuildSuccessResponse(animelist);
+            return response.BuildSuccessResponse(animes);
 
         }
     }
