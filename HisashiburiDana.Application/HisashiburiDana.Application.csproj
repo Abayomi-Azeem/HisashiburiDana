@@ -13,6 +13,8 @@
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.7" />
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="GraphQL.Primitives" Version="6.0.0" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -24,6 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\HisashiburiDana.Contract\HisashiburiDana.Contract.csproj" />
     <ProjectReference Include="..\HisashiburiDana.Domain\HisashiburiDana.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mapper\" />
   </ItemGroup>
 
 </Project>

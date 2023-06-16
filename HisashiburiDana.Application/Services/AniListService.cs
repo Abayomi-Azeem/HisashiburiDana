@@ -49,7 +49,7 @@ namespace HisashiburiDana.Application.Services
 
             var genres = await _animelistManager.GetAllGenres();
 
-            if (response == null)
+            if (genres == null)
             {
                 var errors = new List<string>()
                 {
@@ -67,7 +67,7 @@ namespace HisashiburiDana.Application.Services
 
             var animes = await _animelistManager.GetTrendingAnimes();
 
-            if (response == null)
+            if (animes == null)
             {
                 var errors = new List<string>()
                 {
@@ -84,7 +84,7 @@ namespace HisashiburiDana.Application.Services
             var response = new GeneralResponseWrapper<AnimeList>(_logger);
             var animes = await _animelistManager.SearchAnimes(animeName);
 
-            if (response == null)
+            if (animes == null)
             {
                 var errors = new List<string>()
                 {

@@ -1,11 +1,17 @@
 ﻿using Azure.Core;
 using HisashiburiDana.Application.Abstractions.Application;
+using HisashiburiDana.Contract.AnimeManager;
+using HisashiburiDana.Contract.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace HisashiburiDana.Api.Controllers
 {
+    /// <summary>
+    /// Handles Anime Listing Operations
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -19,8 +25,15 @@ namespace HisashiburiDana.Api.Controllers
         }
 
 
+        /// <summary>
+        /// Get List of Animes Page by Page
+        /// </summary>
+        /// <param name="PageNumber"></param> The Page you  want to Search For
+        /// <returns></returns>
         [Route("getanimes")]
         [HttpGet]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<AnimeList>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAnimes(int PageNumber = 1)
         {
             var response = await _anilistService.GetAnimes(PageNumber);
@@ -31,8 +44,15 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         } 
 
+
+        /// <summary>
+        /// Get All Available Anime Genres
+        /// </summary>
+        /// <returns></returns>
         [Route("getgenres")]
         [HttpGet]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<AllGenres>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetGenres()
         {
             var response = await _anilistService.GetAllGenres();
@@ -43,6 +63,14 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+
+        /// <summary>
+        /// Get Top 10 Trending Animes
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(GeneralResponseWrapper<AnimeList>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         [Route("gettrendinganimes")]
         [HttpGet]
         public async Task<IActionResult> GetTrending()
@@ -55,8 +83,17 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+
+        /// <summary>
+        /// Get Animes by Title: Either English or Romanji
+        /// </summary>
+        /// <param name="animeName"></param> The Name you want to search by
+        /// <returns></returns>
         [Route("searchanime")]
         [HttpPost]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<AnimeList>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SearchAnime(string animeName)
         {
             var response = await _anilistService.SearchInAnimeList(animeName);

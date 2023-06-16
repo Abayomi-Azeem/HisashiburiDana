@@ -89,7 +89,7 @@ namespace HisashiburiDana.Domain.Entities
 
         public string Genres { get; private set; }
 
-        public string RankingId { get; set; }
+        public string RankingId { get; private set; }
 
         public DateTime DateAdded { get; private set; }
 
