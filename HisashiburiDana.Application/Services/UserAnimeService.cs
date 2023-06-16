@@ -202,6 +202,284 @@ namespace HisashiburiDana.Application.Services
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
+
+        public async Task<GeneralResponseWrapper<bool>> MoveToCurrentlyWatchingFromAlreadyWatched(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchedAnimes? anime = await _unitOfWork.WatchedAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                WatchingAnimes watchedAnime = WatchingAnimes.Create(anime);
+
+                await _unitOfWork.WatchingAnimeRepo.InsertAsync(watchedAnime);
+
+                await _unitOfWork.WatchedAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToCurrentlyWatchingFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+            }
+        }
+
+        public async Task<GeneralResponseWrapper<bool>> MoveToAlreadyWatchedFromWatchList(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                ToWatchAnimes? anime = await _unitOfWork.ToWatchAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                WatchedAnimes watchedAnime = WatchedAnimes.Create(anime);
+
+                await _unitOfWork.WatchedAnimeRepo.InsertAsync(watchedAnime);
+
+                await _unitOfWork.ToWatchAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToAlreadyWatchedFromWatchList -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+            }
+        }
+
+        public async Task<GeneralResponseWrapper<bool>> MoveToAlreadyWatchedFromCurrentlyWatching(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchingAnimes? anime = await _unitOfWork.WatchingAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                WatchedAnimes watchedAnime = WatchedAnimes.Create(anime);
+
+                await _unitOfWork.WatchedAnimeRepo.InsertAsync(watchedAnime);
+
+                await _unitOfWork.WatchingAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToAlreadyWatchedFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+            }
+        }
+
+        public async Task<GeneralResponseWrapper<bool>> MoveToWatchListFromAlreadyWatched(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchedAnimes? anime = await _unitOfWork.WatchedAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                ToWatchAnimes watchedAnime = ToWatchAnimes.Create(anime);
+
+                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(watchedAnime);
+
+                await _unitOfWork.WatchedAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToWatchListFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+            }
+        }
+    
+        public async Task<GeneralResponseWrapper<bool>> MoveToWatchListFromCurrentlyWatching(MoveAnimeWithinUserLists request)
+        {
+            var response = new GeneralResponseWrapper<bool>();
+
+            var validator = new MoveAnimeWithinUserListsValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchingAnimes? anime = await _unitOfWork.WatchingAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                ToWatchAnimes watchedAnime = ToWatchAnimes.Create(anime);
+
+                await _unitOfWork.ToWatchAnimeRepo.InsertAsync(watchedAnime);
+
+                await _unitOfWork.WatchingAnimeRepo.Delete(anime);
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred in MoveToWatchListFromCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
+            }
+        }
+    
+               
+    
     }
 }
 

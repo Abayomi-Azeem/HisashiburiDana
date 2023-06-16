@@ -28,7 +28,7 @@ namespace HisashiburiDana.Domain.Entities
             DateStartedWatching = DateTime.UtcNow.AddHours(1);
         }
 
-        public WatchingAnimes(ToWatchAnimes toWatchAnimes)
+        private WatchingAnimes(ToWatchAnimes toWatchAnimes)
         {
             Id = Guid.NewGuid().ToString();
             UserId = toWatchAnimes.UserId;
@@ -42,8 +42,28 @@ namespace HisashiburiDana.Domain.Entities
             Episodes = toWatchAnimes.Episodes;
             Genres = toWatchAnimes.Genres;
             DateAdded = DateTime.UtcNow.AddHours(1);
-            DateStartedWatching = toWatchAnimes.DateAdded;
+            DateStartedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = toWatchAnimes.RankingId;
         }
+
+        private WatchingAnimes(WatchedAnimes anime)
+        {
+            Id = Guid.NewGuid().ToString();
+            UserId = anime.UserId;
+            Title = anime.Title;
+            Description = anime.Description;
+            StartDate = anime.StartDate;
+            EndDate = anime.EndDate;
+            Status = anime.Status;
+            SiteUrl = anime.SiteUrl;
+            CoverUrl = anime.CoverUrl;
+            Episodes = anime.Episodes;
+            Genres = anime.Genres;
+            DateAdded = DateTime.UtcNow.AddHours(1);
+            DateStartedWatching = DateTime.UtcNow.AddHours(1);
+            RankingId = anime.RankingId;
+        }
+
 
         public WatchingAnimes()
         {
@@ -96,6 +116,11 @@ namespace HisashiburiDana.Domain.Entities
         public static WatchingAnimes Create(ToWatchAnimes toWatchAnimes)
         {
             return new(toWatchAnimes);
+        }
+
+        public static WatchingAnimes Create(WatchedAnimes anime)
+        {
+            return new(anime);
         }
     }
 }

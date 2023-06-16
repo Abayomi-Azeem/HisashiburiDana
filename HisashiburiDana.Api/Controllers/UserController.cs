@@ -62,8 +62,8 @@ namespace HisashiburiDana.Api.Controllers
         }
 
         [HttpPost]
-        [Route("movetocurrentlywatchingfromwatchlist")]
-        public async Task<IActionResult> MoveToCurrentlyWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
+        [Route("movetowatchingfromwatchlist")]
+        public async Task<IActionResult> MoveToCurrentlyWatchingFromToWatch([FromBody] MoveAnimeWithinUserLists animeDetails)
         {
             var response = await _userService.MoveToCurrentlyWatchingFromWatchList(animeDetails);
 
@@ -74,10 +74,73 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
-        //moveToCurrentlywatching
+        [HttpPost]
+        [Route("movetowatchingfromwatched")]
+        public async Task<IActionResult> MoveToCurrentlyWatchingFromWatched([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToCurrentlyWatchingFromAlreadyWatched(animeDetails);
 
-        //moveToalredyWatched
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
+        [HttpPost]
+        [Route("movetowatchedfromwatching")]
+        public async Task<IActionResult> MoveToWatchedFromWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToAlreadyWatchedFromCurrentlyWatching(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("movetowatchedfromwatchlist")]
+        public async Task<IActionResult> MoveToWatchedFromWatchlist([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToAlreadyWatchedFromWatchList(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("movetowatchlistfromwatched")]
+        public async Task<IActionResult> MoveToWatchListdFromWatched([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToWatchListFromAlreadyWatched(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("movetowatchlistfromwatching")]
+        public async Task<IActionResult> MoveToWatchListdFromWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
+        {
+            var response = await _userService.MoveToWatchListFromCurrentlyWatching(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        
         //deleteFromWatchilist
 
         //deletefromAlreadywatched
