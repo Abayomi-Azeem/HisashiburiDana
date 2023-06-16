@@ -29,7 +29,7 @@ namespace HisashiburiDana.Api.Controllers
                 return BadRequest(response);
             }
             return Ok(response);
-        }
+        } 
 
         [Route("getgenres")]
         [HttpGet]
@@ -49,6 +49,18 @@ namespace HisashiburiDana.Api.Controllers
         {
             var response = await _anilistService.GetTrendingAnime();
             if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [Route("searchanime")]
+        [HttpPost]
+        public async Task<IActionResult> SearchAnime(string animeName, int pageNumber = 1)
+        {
+            var response = await _anilistService.SearchInAnimeList(animeName,pageNumber);
+            if (response == null)
             {
                 return BadRequest(response);
             }
