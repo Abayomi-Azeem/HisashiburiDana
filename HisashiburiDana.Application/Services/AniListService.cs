@@ -80,7 +80,7 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName, int pageNumber)
         {
-            var response = new GeneralResponseWrapper<AnimeList>();
+            var response = new GeneralResponseWrapper<AnimeList>(_logger);
             var mediumList = new List<Medium>();
             var animes = await _animelistManager.GetAnimes(pageNumber.ToString());
             var searchResults = animes.Page.Media;
