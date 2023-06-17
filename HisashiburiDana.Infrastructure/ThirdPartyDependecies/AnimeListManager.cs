@@ -1,6 +1,7 @@
 ﻿using GraphQL;
 using HisashiburiDana.Application.Abstractions.Infrastucture.IHelpers;
 using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
+using HisashiburiDana.Application.Enums;
 using HisashiburiDana.Contract.AnimeManager;
 using System;
 using System.Collections.Generic;
@@ -90,6 +91,67 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
             {
                 Query= baseQuery.Replace("[pageNumber]", pageNumber)
                             };
+
+            var response = await _sender.SendGraphQLMessage<AnimeList>(request);
+
+            if (response.Errors == null)
+            {
+                return response.Data;
+            }
+            return null;
+        }
+
+        public async Task<AnimeList> GetSortedAnimes(Sorter sortBy, int pageNumber)
+        {
+            string baseQuery = @"{
+    Page(page:[pageNumber], perPage:20){
+        pageInfo{
+            total
+            currentPage
+            lastPage
+            hasNextPage
+            perPage
+        }
+    
+    media(sort: [sortBy]){
+        id
+        title{
+            english
+            romaji
+            }
+        description
+        startDate{
+            day
+            month
+            year
+        }
+        endDate{
+            day
+            month
+            year
+        }
+        status
+        siteUrl
+        coverImage{
+            extraLarge
+        }
+        episodes
+        genres
+        rankings{
+            rank
+            allTime
+            context
+            type
+            format
+        } 
+        siteUrl           
+    }      
+  }
+}";
+            var request = new GraphQLRequest
+            {
+                Query = baseQuery.Replace("[sortBy]", sortBy.ToString()).Replace("[pageNumber]", pageNumber.ToString())
+            };
 
             var response = await _sender.SendGraphQLMessage<AnimeList>(request);
 
