@@ -17,5 +17,6 @@ namespace HisashiburiDana.Application.Abstractions.Application
         Task<GeneralResponseWrapper<AnimeList>> GetTrendingAnime();
         Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName);
         Task<GeneralResponseWrapper<AnimeList>> GetSortedAnimes(Sorter sortBy, int pageNumber);
+        Task<GeneralResponseWrapper<AnimeList>> FilterAnime(FilterRequest payload);
     }
 }

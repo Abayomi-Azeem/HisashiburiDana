@@ -130,6 +130,17 @@ namespace HisashiburiDana.Api.Controllers
         }
         //Sort by Title, No of Episodes, etc
 
-        //Filter by Genre
+        //Filter by Genre, episodes greater than,episodes lesser than, status
+        [Route("filteranime")]
+        [HttpPost]
+        public async Task<IActionResult> FilterAnime([FromBody] FilterRequest payload)
+        {
+            var response = await _anilistService.FilterAnime(payload);
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
