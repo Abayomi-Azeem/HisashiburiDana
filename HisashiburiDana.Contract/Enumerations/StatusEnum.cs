@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HisashiburiDana.Contract.Common
+namespace HisashiburiDana.Contract.Enumerations
 {
-    public class Enumerations
+    public class StatusEnum
     {
         public enum AnimeStatus
         {
-            EMPTY = 0,
             FINISHED = 1,
             RELEASING = 2,
             NOT_YET_RELEASED = 3,

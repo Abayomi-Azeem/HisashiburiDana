@@ -98,7 +98,7 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<AnimeList>> FilterAnime(FilterRequest payload)
         {
-            _logger.LogInformation($"Search Anime Request arrived -----");
+            _logger.LogInformation($"Filter Anime Request arrived -----");
             var response = new GeneralResponseWrapper<AnimeList>(_logger);
             var animes = await _animelistManager.FilterAnimes(payload);
 

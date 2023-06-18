@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static HisashiburiDana.Contract.Common.Enumerations;
+using static HisashiburiDana.Contract.Enumerations.StatusEnum;
 
 namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
 {
@@ -244,19 +244,19 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
                 query += $" genre: \"{payload.Genre}\"";
             }
 
-            if (payload.EpisodesGreaterThan > 0)
+            if (payload.EpisodesGreaterThan > 0 || payload.EpisodesGreaterThan != null)
             {
                 query += $"{(string.IsNullOrEmpty(payload.Genre) ? "" : ",")} episodes_greater: {payload.EpisodesGreaterThan}";
             }
 
-            if (payload.Status != AnimeStatus.EMPTY)
+            if (payload.Status != null)
             {
-                query += $"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan <= 0 ? "" : ",")} status: {payload.Status}";
+                query += $"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan == null || payload.EpisodesGreaterThan == null ? "" : ",")} status: {payload.Status}";
             }
 
-            if (payload.isAdult)
+            if (payload.isAdult != null)
             {
-                query += $"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan <= 0 && payload.Status == AnimeStatus.EMPTY ? "" : ",")} isAdult: true";
+                query += $@"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan == null || payload.EpisodesGreaterThan == null && payload.Status == null ? "" : ",")} isAdult: {Convert.ToString(payload.isAdult).ToLower()}";
             }
 
             query += @") {
