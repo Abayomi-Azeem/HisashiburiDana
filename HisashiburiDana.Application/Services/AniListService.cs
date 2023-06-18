@@ -97,12 +97,6 @@ namespace HisashiburiDana.Application.Services
 
         }
     
-
-
-
-
-
-
         public async Task<GeneralResponseWrapper<AnimeList>> GetSortedAnimes(Sorter sortBy, int pageNumber)
         {
             _logger.LogInformation($"GetSortedAnimes Request arrived ----- Sort By: {sortBy.ToString()}");

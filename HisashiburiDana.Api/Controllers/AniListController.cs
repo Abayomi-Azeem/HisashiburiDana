@@ -116,7 +116,6 @@ namespace HisashiburiDana.Api.Controllers
         /// <returns></returns>
         [Route("getsortedanimes")]
         [HttpGet]
-        [HttpPost]
         [ProducesResponseType(typeof(GeneralResponseWrapper<AnimeList>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SortAnime(Sorter sortBy, int pageNumber)
@@ -128,11 +127,19 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(response);
         }
-        //Sort by Title, No of Episodes, etc
+        
 
-        //Filter by Genre, episodes greater than,episodes lesser than, status
+
+
+        /// <summary>
+        /// Filter Anime by Genre, Status, Number of Episodes and PNG Rating
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
         [Route("filteranime")]
         [HttpPost]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<AnimeList>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> FilterAnime([FromBody] FilterRequest payload)
         {
             var response = await _anilistService.FilterAnime(payload);
