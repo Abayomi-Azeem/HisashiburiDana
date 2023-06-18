@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HisashiburiDana.Contract.Common.Enumerations;
 
 namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
 {
@@ -223,6 +224,92 @@ namespace HisashiburiDana.Infrastructure.ThirdPartyDependecies
             }
             return null;
         }
+
+        public async Task<AnimeList> FilterAnimes(FilterRequest payload)
+        {
+            string query = $@"{{
+        Page(page:1, perPage:20){{
+            pageInfo{{
+                total
+                currentPage
+                lastPage
+                hasNextPage
+                perPage
+            }}
+
+            media(";
+
+            if (!string.IsNullOrEmpty(payload.Genre))
+            {
+                query += $" genre: \"{payload.Genre}\"";
+            }
+
+            if (payload.EpisodesGreaterThan > 0)
+            {
+                query += $"{(string.IsNullOrEmpty(payload.Genre) ? "" : ",")} episodes_greater: {payload.EpisodesGreaterThan}";
+            }
+
+            if (payload.Status != AnimeStatus.EMPTY)
+            {
+                query += $"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan <= 0 ? "" : ",")} status: {payload.Status}";
+            }
+
+            if (payload.isAdult)
+            {
+                query += $"{(string.IsNullOrEmpty(payload.Genre) && payload.EpisodesGreaterThan <= 0 && payload.Status == AnimeStatus.EMPTY ? "" : ",")} isAdult: true";
+            }
+
+            query += @") {
+                id
+                title {
+                    english
+                    romaji
+                }
+                description
+                startDate {
+                    day
+                    month
+                    year
+                }
+                endDate {
+                    day
+                    month
+                    year
+                }
+                status
+                siteUrl
+                coverImage {
+                    extraLarge
+                }
+                episodes
+                genres
+                rankings {
+                    rank
+                    allTime
+                    context
+                    type
+                    format
+                } 
+                siteUrl           
+            }      
+        }
+    }";
+
+            var request = new GraphQLRequest
+            {
+                Query = query
+            };
+
+            var response = await _sender.SendGraphQLMessage<AnimeList>(request);
+
+            if (response.Errors == null)
+            {
+                return response.Data;
+            }
+
+            return null;
+        }
+ 
 
     }
 }
