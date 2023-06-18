@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using HisashiburiDana.Application.Abstractions.Application;
+using HisashiburiDana.Contract.AnimeManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -66,9 +67,20 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(response);
         }
-    
+
         //Sort by Title, No of Episodes, etc
 
-        //Filter by Genre
+        //Filter by Genre, episodes greater than,episodes lesser than, status
+        [Route("filteranime")]
+        [HttpPost]
+        public async Task<IActionResult> FilterAnime([FromBody] FilterRequest payload)
+        {
+            var response = await _anilistService.FilterAnime(payload);
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

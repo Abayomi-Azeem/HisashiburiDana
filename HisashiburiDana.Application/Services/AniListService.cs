@@ -95,5 +95,23 @@ namespace HisashiburiDana.Application.Services
             return response.BuildSuccessResponse(animes);
 
         }
+
+        public async Task<GeneralResponseWrapper<AnimeList>> FilterAnime(FilterRequest payload)
+        {
+            _logger.LogInformation($"Filter Anime Request arrived -----");
+            var response = new GeneralResponseWrapper<AnimeList>(_logger);
+            var animes = await _animelistManager.FilterAnimes(payload);
+
+            if (response == null)
+            {
+                var errors = new List<string>()
+                {
+                    "An Error Occurred"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+            return response.BuildSuccessResponse(animes);
+
+        }
     }
 }
