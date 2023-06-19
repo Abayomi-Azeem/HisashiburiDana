@@ -1,6 +1,6 @@
-﻿using HisashiburiDana.Application.Enums;
-using HisashiburiDana.Contract.AnimeManager;
+﻿using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Common;
+using HisashiburiDana.Contract.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

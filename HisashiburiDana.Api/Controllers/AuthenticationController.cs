@@ -58,8 +58,24 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(loginResponse);
         }
-        //login
 
+
+
+        /// <summary>
+        /// Use the Refresh Token to Get a new Access Token
+        /// </summary>
+        /// <returns></returns>
+        [Route("reissuetoken")]
+        [HttpPost]
+        public async Task<IActionResult> ReIssueToken(RefreshTokenRequest request)
+        {
+            var loginResponse = await _authService.ReIssueAccessToken(request);
+            if (loginResponse.HasError)
+            {
+                return BadRequest(loginResponse);
+            }
+            return Ok(loginResponse);
+        }
         
     }
 }
