@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Json;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,9 @@ builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options => options.AddDefaultPolicy(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
+string xmlCommentFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+string xmlCommentFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "HisashiburiDana.Api", Version = "v1" });
@@ -27,6 +32,7 @@ builder.Services.AddSwaggerGen(c =>
     c.DocumentFilter<SwaggerFilter>(); 
 #endif
 
+    c.IncludeXmlComments(xmlCommentFullPath, true);
     var securitySchema = new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -76,8 +82,10 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI(
-    c => c.SwaggerEndpoint("../swagger/v1/swagger.json", "HisashiburiDana.Api")
-    );
+    c => {
+        c.SwaggerEndpoint("../swagger/v1/swagger.json", "HisashiburiDana.Api");
+        c.DocExpansion(DocExpansion.List);
+    });
 
 app.UseMiddleware<ExceptionMiddleWare>();
 app.UseHttpsRedirection();

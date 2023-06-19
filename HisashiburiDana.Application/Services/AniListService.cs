@@ -1,5 +1,6 @@
 ﻿using HisashiburiDana.Application.Abstractions.Application;
 using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
+using HisashiburiDana.Application.Enums;
 using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Common;
 using Microsoft.Extensions.Logging;
@@ -49,7 +50,7 @@ namespace HisashiburiDana.Application.Services
 
             var genres = await _animelistManager.GetAllGenres();
 
-            if (response == null)
+            if (genres == null)
             {
                 var errors = new List<string>()
                 {
@@ -67,7 +68,7 @@ namespace HisashiburiDana.Application.Services
 
             var animes = await _animelistManager.GetTrendingAnimes();
 
-            if (response == null)
+            if (animes == null)
             {
                 var errors = new List<string>()
                 {
@@ -84,7 +85,7 @@ namespace HisashiburiDana.Application.Services
             var response = new GeneralResponseWrapper<AnimeList>(_logger);
             var animes = await _animelistManager.SearchAnimes(animeName);
 
-            if (response == null)
+            if (animes == null)
             {
                 var errors = new List<string>()
                 {
@@ -94,6 +95,24 @@ namespace HisashiburiDana.Application.Services
             }
             return response.BuildSuccessResponse(animes);
 
+        }
+    
+        public async Task<GeneralResponseWrapper<AnimeList>> GetSortedAnimes(Sorter sortBy, int pageNumber)
+        {
+            _logger.LogInformation($"GetSortedAnimes Request arrived ----- Sort By: {sortBy.ToString()}");
+            var response = new GeneralResponseWrapper<AnimeList>(_logger);
+
+            var animes = await _animelistManager.GetSortedAnimes(sortBy, pageNumber);
+
+            if (animes == null)
+            {
+                var errors = new List<string>()
+                {
+                    "An Error Occurred"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+            return response.BuildSuccessResponse(animes);
         }
 
         public async Task<GeneralResponseWrapper<AnimeList>> FilterAnime(FilterRequest payload)

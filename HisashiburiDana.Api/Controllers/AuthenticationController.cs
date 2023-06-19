@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HisashiburiDana.Api.Controllers
 {
+    /// <summary>
+    /// Handles User Authentication Operations
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -16,7 +19,12 @@ namespace HisashiburiDana.Api.Controllers
             _authService = authService;
         }
 
-        //register
+      
+        /// <summary>
+        /// Register as a New User on the PlatForm
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("register")]
         [HttpPost]
         [Produces(typeof(GeneralResponseWrapper<bool>))]
@@ -32,6 +40,12 @@ namespace HisashiburiDana.Api.Controllers
         }
 
 
+
+        /// <summary>
+        /// Login on the Platform
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("login")]
         [HttpPost]
         [Produces(typeof(GeneralResponseWrapper<LoginResponse>))]

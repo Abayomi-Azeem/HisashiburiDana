@@ -1,6 +1,7 @@
 ﻿using HisashiburiDana.Application.Abstractions.Application;
 using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Authentication;
+using HisashiburiDana.Contract.Common;
 using HisashiburiDana.Contract.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HisashiburiDana.Api.Controllers
 {
+
+    /// <summary>
+    /// Handles User-Anime Operations
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -21,7 +26,32 @@ namespace HisashiburiDana.Api.Controllers
         }
 
 
-        //addToWAtchlist
+
+        /// <summary>
+        /// Get List of User Watchlist, Currently Watching Animes and Already Watched Animes
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("getuseranimelist")]
+        [ProducesResponseType(typeof(GeneralResponseWrapper<GetUserAnimesResponse>),StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAnimes(string UserId)
+        {
+            var response = await _userService.GetUserAnimes(UserId);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Add New Anime to User Watchlist
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("addtowatchlist")]
         public async Task<IActionResult> AddToWatchlist([FromBody] AddAnimeFromAniList animeDetails)
@@ -35,8 +65,15 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Add New Anime to User Already Watched List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("addnewtoalreadywatched")]
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         public async Task<IActionResult> AddToAlreadyWatched([FromBody] AddAnimeFromAniList animeDetails)
         {
             var response = await _userService.AddNewAnimeToAlreadyWatched(animeDetails);
@@ -48,6 +85,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Add New Anime to User Currently Watching List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("addnewtocurrentlywatching")]
         public async Task<IActionResult> AddToCurrentlyWatching([FromBody] AddAnimeFromAniList animeDetails)
@@ -61,6 +105,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User Currently Watching List From User WatchList
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchingfromwatchlist")]
         public async Task<IActionResult> MoveToCurrentlyWatchingFromToWatch([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -74,6 +125,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User Currently Watching List From Already Watched List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchingfromwatched")]
         public async Task<IActionResult> MoveToCurrentlyWatchingFromWatched([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -87,6 +145,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User Already Watched List From Currently Watching List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchedfromwatching")]
         public async Task<IActionResult> MoveToWatchedFromWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -100,6 +165,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User Already Watched List From User Watch List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchedfromwatchlist")]
         public async Task<IActionResult> MoveToWatchedFromWatchlist([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -113,6 +185,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User WatchList From User Already Watched List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchlistfromwatched")]
         public async Task<IActionResult> MoveToWatchListdFromWatched([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -126,6 +205,13 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
+
+        /// <summary>
+        /// Move Anime To User WatchList From User Currently Watching List
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
         [HttpPost]
         [Route("movetowatchlistfromwatching")]
         public async Task<IActionResult> MoveToWatchListdFromWatching([FromBody] MoveAnimeWithinUserLists animeDetails)
@@ -138,7 +224,6 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(response);
         }
-
 
         
         //deleteFromWatchilist

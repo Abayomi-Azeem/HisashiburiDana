@@ -1,4 +1,5 @@
-﻿using HisashiburiDana.Contract.AnimeManager;
+﻿using HisashiburiDana.Application.Enums;
+using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Common;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace HisashiburiDana.Application.Abstractions.Application
         Task<GeneralResponseWrapper<AllGenres>> GetAllGenres();
         Task<GeneralResponseWrapper<AnimeList>> GetTrendingAnime();
         Task<GeneralResponseWrapper<AnimeList>> SearchInAnimeList(string animeName);
+        Task<GeneralResponseWrapper<AnimeList>> GetSortedAnimes(Sorter sortBy, int pageNumber);
         Task<GeneralResponseWrapper<AnimeList>> FilterAnime(FilterRequest payload);
     }
 }

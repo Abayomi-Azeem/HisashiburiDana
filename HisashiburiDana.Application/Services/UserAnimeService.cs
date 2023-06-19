@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Amazon.Runtime.Internal;
+using FluentValidation;
 using HisashiburiDana.Application.Abstractions.Application;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
 using HisashiburiDana.Application.Validators;
@@ -15,6 +16,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Amazon.DynamoDBv2.DocumentModel;
+using MapsterMapper;
 
 namespace HisashiburiDana.Application.Services
 {
@@ -22,10 +25,13 @@ namespace HisashiburiDana.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UserAnimeService> _logger;
+        private readonly IMapper _mapper;
 
-        public UserAnimeService(IUnitOfWork unitOfWork)
+        public UserAnimeService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<UserAnimeService> logger)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<GeneralResponseWrapper<bool>> AddNewAnimeToWatchList(AddAnimeFromAniList request)
@@ -459,7 +465,7 @@ namespace HisashiburiDana.Application.Services
     
         public async Task<GeneralResponseWrapper<bool>> MoveToWatchListFromCurrentlyWatching(MoveAnimeWithinUserLists request)
         {
-            _logger.LogInformation($"MoveToWatchListFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            _logger.LogInformation($" MoveToWatchListFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
 
             var response = new GeneralResponseWrapper<bool>(_logger);
 
@@ -516,9 +522,58 @@ namespace HisashiburiDana.Application.Services
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
             }
         }
-    
-               
-    
+
+        public async Task<GeneralResponseWrapper<GetUserAnimesResponse>> GetUserAnimes(string userId)
+        {
+            _logger.LogInformation($"GetUserAnimes Request Arrived ---{userId}");
+
+            var response = new GeneralResponseWrapper<GetUserAnimesResponse>(_logger);
+
+            User? user = await _unitOfWork.UserRepo.Get("Id", ScanOperator.Equal, userId);
+            if (user == null)
+            {
+                List<string> errors = new()
+                {
+                    "User Does Not Exist"
+                };
+                return response.BuildFailureResponse(errors);
+            };
+
+            
+            List<WatchedAnimes> userWatchedAnimes = await _unitOfWork.WatchedAnimeRepo.GetAll("UserId", ScanOperator.Equal, userId);
+           
+            List<WatchingAnimes> userWatchingAnimes = await _unitOfWork.WatchingAnimeRepo.GetAll("UserId", ScanOperator.Equal, userId);
+            
+            List<ToWatchAnimes> userToWatchAnimes = await _unitOfWork.ToWatchAnimeRepo.GetAll("UserId", ScanOperator.Equal, userId);
+
+            _logger.LogInformation($"Found List of all User Animes ---{userId}");
+            var animeCollection = new GetUserAnimesResponse();
+
+            foreach (var anime in userWatchedAnimes)
+            {
+                var userAnime =  _mapper.Map(anime, new UserAnime());
+                animeCollection.Watched.Add(userAnime);                
+            }
+            _logger.LogInformation($"Added User Watched Animes to Collection");
+
+            foreach (var anime in userWatchingAnimes)
+            {
+                var userAnime = _mapper.Map(anime, new UserAnime());
+                animeCollection.Watching.Add(userAnime);
+            }
+            _logger.LogInformation($"Added User Watching Animes to Collection");
+
+
+            foreach (var anime in userToWatchAnimes)
+            {
+                var userAnime = _mapper.Map(anime, new UserAnime());
+                animeCollection.WatchList.Add(userAnime);
+            }
+            _logger.LogInformation($"Added User To Watch Animes to Collection");
+
+
+            return response.BuildSuccessResponse(animeCollection);
+        }
     }
 }
 

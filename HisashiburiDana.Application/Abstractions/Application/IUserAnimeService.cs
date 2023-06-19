@@ -27,5 +27,6 @@ namespace HisashiburiDana.Application.Abstractions.Application
         Task<GeneralResponseWrapper<bool>> MoveToWatchListFromAlreadyWatched(MoveAnimeWithinUserLists request);
 
         Task<GeneralResponseWrapper<bool>> MoveToWatchListFromCurrentlyWatching(MoveAnimeWithinUserLists request);
+        Task<GeneralResponseWrapper<GetUserAnimesResponse>> GetUserAnimes(string userId);
     }
 }
