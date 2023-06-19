@@ -42,7 +42,7 @@ namespace HisashiburiDana.Infrastructure.Authentication
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1).AddMinutes(_settings.ExpiryMinutes),
+            expires: DateTime.Now.AddMinutes(_settings.ExpiryMinutes),
             signingCredentials: signInCredentials
             );
 
@@ -64,7 +64,7 @@ namespace HisashiburiDana.Infrastructure.Authentication
             issuer: _settings.Issuer,
             audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1).AddHours(6),
+            expires: DateTime.UtcNow.AddHours(2),
             signingCredentials: signInCredentials
             );
 
@@ -90,6 +90,25 @@ namespace HisashiburiDana.Infrastructure.Authentication
             return claimsPrincipal.Identity.IsAuthenticated;
         }
 
+        public ClaimsPrincipal ValidateAccessTokenWithoutLifetime(string accessToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey)),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidIssuer = _settings.Issuer,
+                ValidAudience = _settings.Audience,
+
+            };
+
+            var claimsPrincipal = tokenHandler.ValidateToken(accessToken, validationParameters, out _);
+           
+            return claimsPrincipal;
+        }
 
     }
 }

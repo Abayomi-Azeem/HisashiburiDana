@@ -1,8 +1,8 @@
 ﻿using Azure.Core;
 using HisashiburiDana.Application.Abstractions.Application;
-using HisashiburiDana.Application.Enums;
 using HisashiburiDana.Contract.AnimeManager;
 using HisashiburiDana.Contract.Common;
+using HisashiburiDana.Contract.Enumerations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

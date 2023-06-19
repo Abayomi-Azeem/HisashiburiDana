@@ -1,8 +1,8 @@
 ﻿using GraphQL;
 using HisashiburiDana.Application.Abstractions.Infrastucture.IHelpers;
 using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
-using HisashiburiDana.Application.Enums;
 using HisashiburiDana.Contract.AnimeManager;
+using HisashiburiDana.Contract.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

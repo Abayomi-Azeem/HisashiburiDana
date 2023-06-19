@@ -37,11 +37,10 @@ namespace HisashiburiDana.Application.MiddleWares
 
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
-             _logger.LogError($"Exception Caught by MiddleWare: {JsonConvert.SerializeObject(ex)}");
+             _logger.LogError($"Exception Caught by MiddleWare: {JsonConvert.SerializeObject(ex)}");            
             
-            context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return context.Response.WriteAsync("An Error Occurred");
+            return context.Response.WriteAsync("An Error Occurred while handling your request. Kindly try again or reach out to the Administrator for help");
         }
     }
 }

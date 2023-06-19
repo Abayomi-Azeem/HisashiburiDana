@@ -12,7 +12,6 @@ namespace HisashiburiDana.Application.Abstractions.Application
     {
         Task<GeneralResponseWrapper<LoginResponse>> LoginUser(LoginRequest request);
         Task<GeneralResponseWrapper<bool?>> RegisterNewUser(RegisterRequest request);
-
-
+        Task<GeneralResponseWrapper<string>> ReIssueAccessToken(RefreshTokenRequest request);
     }
 }
