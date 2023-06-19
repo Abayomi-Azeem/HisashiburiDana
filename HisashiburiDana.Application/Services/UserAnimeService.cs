@@ -577,7 +577,7 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<bool>> DeleteAnimeFromWatchList(DeleteAnimeRequest request)
         {
-            _logger.LogInformation($" MoveToWatchListFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
+            _logger.LogInformation($" DeleteAnimeFromWatchList Request Arrived ---{JsonConvert.SerializeObject(request)}");
 
             var response = new GeneralResponseWrapper<bool>(_logger);
 
