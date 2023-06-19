@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DocumentModel;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace HisashiburiDana.Application.Services
 {
@@ -132,6 +133,50 @@ namespace HisashiburiDana.Application.Services
             return response.BuildSuccessResponse(true);
         }
 
-        
+        public async Task<GeneralResponseWrapper<string>> ReIssueAccessToken(RefreshTokenRequest request)
+        {
+            _logger.LogInformation($"ReIssue Token Request Arrived ---{request.RefreshToken}");
+            GeneralResponseWrapper<string> response = new(_logger);
+
+            bool isRefreshTokenValid = _tokenGeneratior.ValidateRefreshoken(request.RefreshToken);
+
+            if (!isRefreshTokenValid)
+            {
+                List<string> errors = new()
+                {
+                    "Invalid Refresh Token"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+
+            var accessTokenClaimsPrincipal = _tokenGeneratior.ValidateAccessTokenWithoutLifetime(request.AccessToken);
+
+            if (!accessTokenClaimsPrincipal.Identity.IsAuthenticated)
+            {
+                List<string> errors = new()
+                {
+                    "Invalid Access Token"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+
+            string userId = accessTokenClaimsPrincipal.Claims.FirstOrDefault(x => x.Type.ToLower().Contains("nameid")).Value;
+
+            User? user = await _unitOfWork.UserRepo.Get("Id", ScanOperator.Equal, userId);
+
+            if (user == null)
+            {
+                List<string> errors = new()
+                {
+                    "User does not exist"
+                };
+                return response.BuildFailureResponse(errors);
+            }
+
+            var newAccessToken = _tokenGeneratior.GenerateAccessToken(user);
+
+            return response.BuildSuccessResponse(newAccessToken);
+
+        }
     }
 }
