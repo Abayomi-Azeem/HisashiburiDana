@@ -574,6 +574,168 @@ namespace HisashiburiDana.Application.Services
 
             return response.BuildSuccessResponse(animeCollection);
         }
+
+        public async Task<GeneralResponseWrapper<bool>> DeleteAnimeFromWatchList(DeleteAnimeRequest request)
+        {
+            _logger.LogInformation($" DeleteAnimeFromWatchList Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
+
+            var validator = new DeleteAnimeValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                var anime = await _unitOfWork.ToWatchAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                await _unitOfWork.ToWatchAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from WatchList Successfully for UserId ---{request.UserId}");
+        
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception occurred in DeleteAnimeFromWatchList -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Deleting anime in " });
+            }
+        }
+
+        public async Task<GeneralResponseWrapper<bool>> DeleteAnimeFromAlreadyWatched(DeleteAnimeRequest request)
+        {
+            _logger.LogInformation($" DeleteAnimeFromAlreadyWatched Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
+
+            var validator = new DeleteAnimeValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchedAnimes? anime = await _unitOfWork.WatchedAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                await _unitOfWork.WatchedAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from AlreadyWatched Successfully for UserId ---{request.UserId}");
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception occurred in DeleteAnimeFromAlreadyWatched -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Deleting anime in " });
+            }
+        }
+
+        public async Task<GeneralResponseWrapper<bool>> DeleteAnimeFromCurrentlyWatching(DeleteAnimeRequest request)
+        {
+            _logger.LogInformation($" DeleteAnimeFromCurrentlyWatching Request Arrived ---{JsonConvert.SerializeObject(request)}");
+
+            var response = new GeneralResponseWrapper<bool>(_logger);
+
+            var validator = new DeleteAnimeValidator().Validate(request);
+
+            if (!validator.IsValid)
+            {
+                var errors = new List<string>();
+                foreach (var error in validator.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+
+                return response.BuildFailureResponse(errors);
+            }
+
+            try
+            {
+
+                WatchingAnimes? anime = await _unitOfWork.WatchingAnimeRepo.GetById(request.AnimeId);
+
+                if (anime == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime Cannot Be Found"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                if (anime.UserId != request.UserId)
+                {
+                    List<string> errors = new()
+                    {
+                        "Anime cannot be found in User List"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
+
+                await _unitOfWork.WatchingAnimeRepo.Delete(anime);
+                _logger.LogInformation($"Deleted Anime from Currently Watching Successfully for UserId ---{request.UserId}");
+
+                return response.BuildSuccessResponse(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Exception occurred in DeleteAnimeCurrentlyWatching -- {ex.Message}--\n {ex.Message}");
+                return response.BuildFailureResponse(new List<string> { "Error Occurred While Deleting anime in " });
+            }
+        }
     }
 }
 

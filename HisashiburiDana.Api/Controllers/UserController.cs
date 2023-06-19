@@ -225,11 +225,64 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
-        
-        //deleteFromWatchilist
 
-        //deletefromAlreadywatched
+        /// <summary>
+        /// Delete Anime From Watchlist
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
+        [HttpPost]
+        [Route("deletefromwatchlist")]
+        public async Task<IActionResult> DeleteFromWatchlist([FromBody] DeleteAnimeRequest animeDetails)
+        {
+            var response = await _userService.DeleteAnimeFromWatchList(animeDetails);
 
-        //deleteFromcurrentlywatching
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Delete Anime From Already Watched
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
+        [HttpPost]
+        [Route("deletefromalreadywatched")]
+        public async Task<IActionResult> DeletefromAlreadywatched([FromBody] DeleteAnimeRequest animeDetails)
+        {
+            var response = await _userService.DeleteAnimeFromAlreadyWatched(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Delete Anime From Currently Watching
+        /// </summary>
+        /// <param name="animeDetails"></param>
+        /// <returns></returns>
+        [Produces(typeof(GeneralResponseWrapper<bool>))]
+        [HttpPost]
+        [Route("deletefromcurrentlywatching")]
+        public async Task<IActionResult> DeleteFromcurrentlywatching([FromBody] DeleteAnimeRequest animeDetails)
+        {
+            var response = await _userService.DeleteAnimeFromCurrentlyWatching(animeDetails);
+
+            if (response.HasError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }
