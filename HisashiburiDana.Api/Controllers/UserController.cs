@@ -285,16 +285,5 @@ namespace HisashiburiDana.Api.Controllers
             return Ok(response);
         }
 
-        //Forgot Password
-        //* input email address to receive code
-        //* Generate random code and send to email address
-        //* deeplink that takes you back to page to verify code sent is code inputted
-        //* call change password endpoint to change password to new password
-
-        //Change Password
-        //* input old password and new password
-        //* check if old password matches already existing password with the userId or user email
-        //* check if new password and old password are the same
-        //* update password column in user details
     }
 }

@@ -27,24 +27,43 @@ namespace HisashiburiDana.Domain.Entities
         public User() { }
 
         [DynamoDBHashKey]
-        public string Id { get; private set; }
+        public string? Id { get; private set; }
 
-        public string FirstName { get; private set; }
+        public string? FirstName { get; private set; }
 
-        public string LastName { get; private set; }
+        public string? LastName { get; private set; }
 
-        public string Password { get; private set; }
+        public string? Password { get; private set; }
 
-        public string PasswordSalt { get; private set; }
+        public string? PasswordSalt { get; private set; }
 
-        public string Email { get; private set; }
+        public string? Email { get; private set; }
+        public string? PassCode { get; set; }
+        public DateTime? DateCreated { get; private set; }
+        public DateTime? CodeExpiration { get; set; }
+        
 
-        public DateTime DateCreated { get; private set; }
 
 
         public static User Create(string firstname, string lastname, string email, string passwordhash, string passwordSalt)
         {
             return new(Guid.NewGuid(), firstname, lastname, passwordhash, email, passwordSalt);
         }
+
+        public User UpdatePassword(string passwordHash, string passwordSalt)
+        {
+            Password= passwordHash;
+            PasswordSalt= passwordSalt;
+            return this;
+        }
+        
+        public User UpdateCode(string? code,DateTime? codeExpiration)
+        {
+            PassCode = code;
+            CodeExpiration = codeExpiration;
+            return this;
+        }
+        
+
     }
 }

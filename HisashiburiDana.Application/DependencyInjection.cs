@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mapster;
 using System.Reflection;
+using HisashiburiDana.Application.Abstractions.Infrastucture.IEmailService;
 
 namespace HisashiburiDana.Application
 {
