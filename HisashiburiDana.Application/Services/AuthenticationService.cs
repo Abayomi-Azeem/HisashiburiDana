@@ -320,9 +320,7 @@ namespace HisashiburiDana.Application.Services
             {
                 //* check that code is the same as the one sent to the user's email
                 var user = _unitOfWork.UserRepo.Get("Email", ScanOperator.Equal, email).Result;
-                var expiryThreshold = TimeSpan.FromMinutes(5);
-                var dateofexpiry = user.CodeExpiration;
-                if (user.PassCode != code || DateTime.Now > dateofexpiry.Value.Add(expiryThreshold))
+                if (user.PassCode != code || DateTime.Now > user.CodeExpiration)
                 {
                     List<string> errors = new()
                     {
