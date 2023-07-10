@@ -73,7 +73,6 @@ namespace HisashiburiDana.Application.Services
             {
                 _logger.LogError($"Exception occurred in AddNewAnimeWatchList -- {ex.Message}--\n {ex.Message}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Adding to List" });
-                 
             }
         }
     

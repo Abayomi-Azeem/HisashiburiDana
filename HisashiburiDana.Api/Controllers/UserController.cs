@@ -284,5 +284,6 @@ namespace HisashiburiDana.Api.Controllers
             }
             return Ok(response);
         }
+
     }
 }
