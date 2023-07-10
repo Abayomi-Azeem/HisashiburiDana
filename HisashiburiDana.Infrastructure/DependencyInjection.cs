@@ -2,6 +2,7 @@
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Authentication;
+using HisashiburiDana.Application.Abstractions.Infrastucture.IEmailService;
 using HisashiburiDana.Application.Abstractions.Infrastucture.IHelpers;
 using HisashiburiDana.Application.Abstractions.Infrastucture.IPersistence.IRepository;
 using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence;
@@ -9,6 +10,7 @@ using HisashiburiDana.Application.Abstractions.Infrastucture.Persistence.IReposi
 using HisashiburiDana.Application.Abstractions.Infrastucture.ThirdPartyDependencies;
 using HisashiburiDana.Contract.Common;
 using HisashiburiDana.Infrastructure.Authentication;
+using HisashiburiDana.Infrastructure.EmailService;
 using HisashiburiDana.Infrastructure.Helpers;
 using HisashiburiDana.Infrastructure.Persistence;
 using HisashiburiDana.Infrastructure.Persistence.Repository;
@@ -39,9 +41,11 @@ namespace HisashiburiDana.Infrastructure
             services.AddScoped<IAlreadyWatchedAnimeRepository, AlreadyWatchedAnimeRepository>();            
             services.AddScoped<IAnimeRankRepository, AnimeRankRepository>();
             services.AddSingleton<IRequestSender, RequestSender>();
-            
+            services.AddScoped<IEmailSender, EmailSender>();
+
 
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
             var accessKey = configuration.GetSection("AwsSettings:AccessKey").Value;
             var secretkey = configuration.GetSection("AwsSettings:SecretKey").Value;
