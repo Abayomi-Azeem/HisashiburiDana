@@ -17,8 +17,8 @@ namespace HisashiburiDana.Domain.Entities
             UserId = request.UserId;
             Title = String.Join(",", request.Media.Title.English, request.Media.Title.Romaji);
             Description = request.Media.Description;
-            StartDate = new DateTime(request.Media.StartDate.Year ?? 0, request.Media.StartDate.Month ?? 0, request.Media.StartDate.Day ?? 0);
-            EndDate = new DateTime(request.Media.EndDate.Year ?? 0, request.Media.EndDate.Month ?? 0, request.Media.EndDate.Day ?? 0);
+            StartDate = new DateTime(request.Media.StartDate.Year ?? DateTime.MinValue.Year, request.Media.StartDate.Month ?? DateTime.MinValue.Month, request.Media.StartDate.Day ?? DateTime.MinValue.Day);
+            EndDate = new DateTime(request.Media.EndDate.Year ?? DateTime.MinValue.Year, request.Media.EndDate.Month ?? DateTime.MinValue.Month, request.Media.EndDate.Month ?? DateTime.MinValue.Day);
             Status = request.Media.Status;
             SiteUrl = request.Media.SiteUrl;
             CoverUrl = request.Media.CoverImage.ExtraLarge;
