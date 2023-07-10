@@ -90,11 +90,6 @@ namespace HisashiburiDana.Api.Controllers
         [Produces(typeof(GeneralResponseWrapper<bool>))]
         public async Task<IActionResult> ForgotPassword(string email)
         {
-            var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
-            if (email != userEmail.Value)
-            {
-                return BadRequest("email is not attached to this account.\nkindly input the email attached to this account");
-            }
             var response = await _authService.SendCodeToEmail(email);
             if (response.HasError)
             {
@@ -140,12 +135,7 @@ namespace HisashiburiDana.Api.Controllers
         [Produces(typeof(GeneralResponseWrapper<LoginResponse>))]
         public async Task<IActionResult> VerifyCode(string code)
         {
-            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
-            if(email == null)
-            {
-                return BadRequest("OOps something went wrong");
-            }
-            var response = await _authService.ValidateCode(code,email.Value);
+            var response = await _authService.ValidateCode(code);
             if (response.HasError)
             {
                 return BadRequest(response);

@@ -26,8 +26,6 @@ namespace HisashiburiDana.Contract.EmailManager
             </p>
               <p>
                 If you don't recognize the Anime account {email}, you can click here to remove your email address from that account.
-                Thanks,
-                The Microsoft account team
             </p>
             <p>
                 Thanks,

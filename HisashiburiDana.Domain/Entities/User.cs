@@ -38,9 +38,9 @@ namespace HisashiburiDana.Domain.Entities
         public string? PasswordSalt { get; private set; }
 
         public string? Email { get; private set; }
-        public string? PassCode { get; set; }
+        public string? PassCode { get; private set; }
         public DateTime? DateCreated { get; private set; }
-        public DateTime? CodeExpiration { get; set; }
+        public DateTime? CodeExpiration { get; private set; }
         
 
 
@@ -50,19 +50,22 @@ namespace HisashiburiDana.Domain.Entities
             return new(Guid.NewGuid(), firstname, lastname, passwordhash, email, passwordSalt);
         }
 
-        public User UpdatePassword(string passwordHash, string passwordSalt)
+        public static User UpdatePassword(User user, string passwordHash, string passwordSalt)
         {
-            Password= passwordHash;
-            PasswordSalt= passwordSalt;
-            return this;
+            user.Password = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            return user;
         }
         
-        public User UpdateCode(string? code,DateTime? codeExpiration)
+        public static User UpdateCode(User user,string code,DateTime codeExpiration)
         {
-            PassCode = code;
-            CodeExpiration = codeExpiration;
-            return this;
+            user.PassCode = code;
+            user.CodeExpiration = codeExpiration;
+            return user;
         }
+
+
+
         
 
     }

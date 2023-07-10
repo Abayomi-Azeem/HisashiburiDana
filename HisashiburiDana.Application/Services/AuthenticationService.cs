@@ -187,7 +187,7 @@ namespace HisashiburiDana.Application.Services
 
         public async Task<GeneralResponseWrapper<bool?>> SendCodeToEmail(string email)
         {
-            _logger.LogInformation($"Login Request Arrived ---{email}");
+            _logger.LogInformation($"SendCodeToEmail Request Arrived ---{email}");
             GeneralResponseWrapper<bool?> response = new(_logger);
 
             try
@@ -197,9 +197,9 @@ namespace HisashiburiDana.Application.Services
                 if (user == null)
                 {
                     List<string> errors = new()
-                {
-                    "incorrect email address, kindly input the email attached to this account"
-                };
+                    {
+                      "An Otp has been sent to your email address, if the email address provided is correct."
+                    };
                     return response.BuildFailureResponse(errors);
                 }
 
@@ -217,11 +217,11 @@ namespace HisashiburiDana.Application.Services
                     return response.BuildFailureResponse(errors);
                 }
 
-                // Saving the code in the user's record in the database
-                user.PassCode = code;
-                user.CodeExpiration = DateTime.Now.AddMinutes(5);
-                var codeExpiration = user.CodeExpiration;
-                var updateCode = user.UpdateCode(code, codeExpiration);
+                //* Saving the code in the user's record in the database
+                //
+                var codeExpiration = DateTime.Now.AddMinutes(5);
+               // var updateCode = User.UpdateCode(code, codeExpiration);
+                var updateCode = User.UpdateCode(user,code ,codeExpiration);
                 await _unitOfWork.UserRepo.Update(updateCode);
                 _logger.LogInformation($"Updated Pass Code Successfully for User ---{email}");
 
@@ -232,7 +232,7 @@ namespace HisashiburiDana.Application.Services
             catch (Exception ex)
             {
 
-                _logger.LogError($"Exception occurred in Updating PassCode and CodeExpiration -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in Updating PassCode and CodeExpiration -- {ex.Message}--\n {ex.StackTrace}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Updating PassCode and CodeExpiration" });
             }        
          }
@@ -259,36 +259,12 @@ namespace HisashiburiDana.Application.Services
             try
             {
 
-                var user = _unitOfWork.UserRepo.Get("Email", ScanOperator.Equal, email).Result;
-                var oldpassword = PasswordHasher.HashPassword(request.OldPassword, user.PasswordSalt);
-                var newpassword = PasswordHasher.HashPassword(request.NewPassword, user.PasswordSalt);
-
-               //* checking if old password matches the one in the database
-                if (user.Password != oldpassword)
+                var user = _unitOfWork.UserRepo.Get("Email", ScanOperator.Equal, email).Result; 
+                if(user == null)
                 {
                     List<string> errors = new()
                     {
-                        "your old password is incorrect"
-                    };
-                    return response.BuildFailureResponse(errors);
-                }
-               
-                //* checking if new password matches already existing password with the user email
-                if (newpassword == oldpassword)
-                {
-                    List<string> errors = new()
-                    {
-                        "you used an old password kindly choose a new password"
-                    };
-                    return response.BuildFailureResponse(errors);
-                }
-
-                //* checking if new password and old password are the same
-                if (request.NewPassword != request.ConfirmPassword)
-                {
-                    List<string> errors = new()
-                    {
-                        "these passwords don't match"
+                        "user doesn't exist"
                     };
                     return response.BuildFailureResponse(errors);
                 }
@@ -298,7 +274,7 @@ namespace HisashiburiDana.Application.Services
                 var passwordHash = PasswordHasher.HashPassword(request.NewPassword, passwordSalt);
 
                 //* updating password column in user table
-                var updatePassword = user.UpdatePassword(passwordHash, passwordSalt);
+                var updatePassword = User.UpdatePassword(user, passwordHash, passwordSalt);
                 await _unitOfWork.UserRepo.Update(updatePassword);
                 _logger.LogInformation($"Updated Password Successfully for User ---{email}");
 
@@ -312,14 +288,22 @@ namespace HisashiburiDana.Application.Services
 
         }
 
-        public async Task<GeneralResponseWrapper<bool?>> ValidateCode(string code, string email)
+        public async Task<GeneralResponseWrapper<bool?>> ValidateCode(string code)
         {
-            _logger.LogInformation($"ValidateCode Request Arrived ---{email}");
+            _logger.LogInformation($"ValidateCode Request Arrived --- | DATE: {DateTime.Now:dd MMM yyyy : HH-mm}");
             GeneralResponseWrapper<bool?> response = new(_logger);
             try
             {
                 //* check that code is the same as the one sent to the user's email
-                var user = _unitOfWork.UserRepo.Get("Email", ScanOperator.Equal, email).Result;
+                var user = _unitOfWork.UserRepo.Get("PassCode", ScanOperator.Equal, code).Result;
+                if(user == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "invalid user"
+                    };
+                    return response.BuildFailureResponse(errors);
+                }
                 if (user.PassCode != code || DateTime.Now > user.CodeExpiration)
                 {
                     List<string> errors = new()
@@ -330,19 +314,15 @@ namespace HisashiburiDana.Application.Services
                 }
 
                 //reset Passcode and CodeExpiration to default
-                user.PassCode = null;
-                user.CodeExpiration = null;
-                var codeExpiration = user.CodeExpiration;
-                var resetCode = user.PassCode;
-                var updateCode = user.UpdateCode(resetCode, codeExpiration);
+                var updateCode = User.UpdateCode(user,null,DateTime.MinValue);
                 await _unitOfWork.UserRepo.Update(updateCode);
-                _logger.LogInformation($"Updated PassCode and CodeExpiration Successfully for User ---{email}");
+                _logger.LogInformation($"Updated PassCode and CodeExpiration Successfully | DATE: {DateTime.Now:dd MMM yyyy : HH-mm}");
                 return response.BuildSuccessResponse(true);
             }
             catch (Exception ex)
             {
 
-                _logger.LogError($"Exception occurred in Updating PassCode and CodeExpiration -- {ex.Message}--\n {ex.Message}");
+                _logger.LogError($"Exception occurred in Updating PassCode and CodeExpiration -- {ex.Message}--\n {ex.StackTrace}");
                 return response.BuildFailureResponse(new List<string> { "Error Occurred While Updating PassCode and CodeExpiration" });
             }
  

@@ -14,8 +14,16 @@ namespace HisashiburiDana.Application.Validators
         public ResetPasswordRequestValidator()
         {
             RuleFor(x => x.OldPassword).NotNull().NotEmpty();
-            RuleFor(x => x.NewPassword).NotEmpty().NotNull();
-            RuleFor(x => x.ConfirmPassword).NotEmpty().NotNull();
+            RuleFor(x => x.NewPassword).NotNull().NotEmpty();
+            RuleFor(x => x.ConfirmPassword).NotNull().NotEmpty();
+            RuleFor(x => x)
+                   .Must(x => x.NewPassword != x.OldPassword)
+                   .WithMessage("You used an old password. Please choose a new password.");
+
+            RuleFor(x => x)
+                .Must(x => x.NewPassword == x.ConfirmPassword)
+                .WithMessage("The new password and confirm password do not match.");
+
         }
     }
 }
